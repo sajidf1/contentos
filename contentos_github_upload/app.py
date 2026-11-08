@@ -7,6 +7,7 @@ import streamlit as st
 from docx import Document
 
 from contentos.core import Request, load_json
+from contentos.editorial_audit import audit
 from contentos.brief_sources import BriefSourceError, extract_upload, extract_public_google_doc
 from contentos.engine import DRAFT_MODEL, JUDGE_MODEL, run_demo, run_live
 from contentos.guard import BudgetExceeded, DailyCap, Meter
@@ -292,6 +293,34 @@ def show(res: dict) -> None:
         st.line_chart({'score': [a['score'] for a in res['attempts']]})
     with st.expander('Attempt history'):
         st.json(res['attempts'])
+    st.markdown('### Editorial preflight · AP style / US claims / SEO')
+    brief = Request(**res['request'])
+    preflight = audit(res['draft'], brief)
+    p1, p2, p3 = st.columns(3)
+    p1.metric('AP-informed flags', len(preflight['ap']))
+    p2.metric('US claims flags', len(preflight['legal']))
+    p3.metric('Headings found', preflight['seo']['headings'])
+    with st.expander('Review style, claims and search optimization recommendations', expanded=True):
+        st.markdown('**AP-informed style guidance**')
+        if preflight['ap']:
+            for item in preflight['ap']:
+                st.write(f"• {item['example']}: {item['guidance']}")
+        else:
+            st.caption('No issues found by the limited automated style rules.')
+        st.markdown('**General US advertising and legal issue spotting**')
+        if preflight['legal']:
+            for item in preflight['legal']:
+                st.write(f"• {item['example']}: {item['guidance']}")
+        else:
+            st.caption('No flagged phrases found. Claims still require human substantiation review.')
+        st.markdown('**SEO and discoverability recommendations**')
+        for recommendation in preflight['seo']['recommendations']:
+            st.write('• ' + recommendation)
+        st.markdown('**Portfolio-informed editorial craft library**')
+        st.caption(f"{preflight['portfolio']['references']} published-work references provide craft themes such as executive framing, accessible explanation, research discipline and narrative pacing.")
+        st.caption(preflight['portfolio']['note'])
+        st.caption(preflight['disclaimer'])
+    st.download_button('Download editorial preflight (.json)', json.dumps(preflight, indent=2), file_name='editorial-preflight.json', mime='application/json')
     st.markdown('### 03 / Your draft')
     actual_words = len(res['draft'].split())
     target_words = res.get('request', {}).get('target_words', 0)
