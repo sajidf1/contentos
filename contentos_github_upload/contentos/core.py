@@ -3,6 +3,7 @@ from dataclasses import dataclass, asdict
 from typing import Any
 import json
 from pathlib import Path
+from .demo_skills import draft as skill_draft, derivatives as skill_derivatives
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'data'
@@ -51,45 +52,13 @@ def score_text(text: str, req: Request) -> dict:
 
 
 def demo_draft(req: Request, revision: int = 0) -> str:
-    ctx = context_for(req)
-    keywords = ', '.join(ctx['keywords'])
-    base = f'''# {req.title}
-
-## Why this matters
-
-For {ctx['persona'].lower()}, a thoughtful approach to {req.gtm_motion.lower()} helps teams make better decisions. You can connect the work to {keywords} while keeping the message practical and grounded.
-
-## The opportunity
-
-You need a repeatable framework for evaluating tradeoffs, building internal alignment, and defining measurable outcomes. The strongest approach starts with a clear objective and the right stakeholders.
-
-## A practical approach
-
-1. Define the audience and the business decision.
-2. Align stakeholders on expected outcomes and useful evidence.
-3. Pilot a focused initiative and document what changes.
-4. Review results with the team and refine the next iteration.
-
-## What to do next
-
-You can use this framework to create a clear plan, identify ownership, and communicate progress. This example is fictional and makes no product performance claims.
-
-## Editorial notes
-
-Requested direction: {req.direction or 'Use a clear, practical executive tone.'}
-Funnel stage: {req.funnel}. Target persona: {ctx['persona']}.
-'''
-    if req.outline.strip():
-        base += '\n## Supplied outline (editorial brief)\n\n' + req.outline.strip() + '\n'
-    if req.audience.strip() or req.additional_instructions.strip():
-        base += '\n## Additional brief requirements\n\n' + (req.audience.strip() or ctx['persona']) + ': ' + req.additional_instructions.strip() + '\n'
-    if revision:
-        base += '\n## Measurement and iteration\n\nYou can track stakeholder adoption, cycle time, and the quality of resulting decisions. Document assumptions and ask reviewers to validate all claims before publication.\n'
-    return base
+    """Generate a format-specific illustrative draft (no live AI)."""
+    return skill_draft(req, revision)
 
 
 def demo_derivatives(req: Request) -> dict[str, str]:
-    return {name: f'{name}: {req.title}. Explore a practical approach for {context_for(req)["persona"].lower()}. Learn more in the full {req.asset_type.lower()}.' for name in req.derivatives}
+    """Generate distinct format-specific derivative examples."""
+    return skill_derivatives(req)
 
 
 def handoff(req: Request, score: int) -> dict:
