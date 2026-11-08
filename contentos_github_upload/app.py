@@ -7,6 +7,7 @@ import streamlit as st
 from docx import Document
 
 from contentos.core import Request, load_json
+from contentos.salesforce_demo import recommended_opportunities, brief_for
 from contentos.editorial_audit import audit
 from contentos.brief_sources import BriefSourceError, extract_upload, extract_public_google_doc
 from contentos.engine import DRAFT_MODEL, JUDGE_MODEL, run_demo, run_live
@@ -382,6 +383,32 @@ mode = MODES[1]
 code = ''
 max_rev = 2
 
+# ---------------- synthetic CRM intelligence ----------------
+st.markdown('### Salesforce-style deal intelligence · synthetic data')
+st.caption('FICTIONAL DEMO DATA — No Salesforce connection. Every account, deal value, risk signal and call note below is invented for demonstration. Recommendations are rule-based, not live AI.')
+demo_opps = recommended_opportunities()
+with st.expander('Explore fictional opportunities and generate a copy-ready content brief', expanded=True):
+    st.dataframe(
+        [{'Opportunity': o['id'], 'Fictional account': o['account'], 'Stage': o['stage'],
+          'Deal value (dummy USD)': o['amount_usd'], 'Risk': o['risk'],
+          'Editorial tier': o['priority'], 'Suggested content': o['content']} for o in demo_opps],
+        use_container_width=True, hide_index=True,
+    )
+    chosen_id = st.selectbox('Select a fictional opportunity', [o['id'] for o in demo_opps],
+                             format_func=lambda key: next(o['account'] + ' · ' + o['risk'] + ' risk' for o in demo_opps if o['id'] == key))
+    selected_opp = next(o for o in demo_opps if o['id'] == chosen_id)
+    st.markdown('**Why this opportunity was flagged**')
+    st.write(selected_opp['signal'])
+    st.markdown('**Synthetic call intelligence**')
+    st.write(selected_opp['call_note'])
+    st.markdown('**Suggested content assignment**')
+    st.write(selected_opp['content'] + ' · ' + selected_opp['audience'])
+    synthetic_brief = brief_for(selected_opp)
+    st.code(synthetic_brief, language='text')
+    st.download_button('Download this fictional sales brief (.txt)', synthetic_brief,
+                       file_name=chosen_id.lower() + '-synthetic-brief.txt', mime='text/plain')
+st.caption('To try it: copy the brief above into Creative direction, or check the box below to attach it automatically. The free template mode is not live AI and may not incorporate every detail of the brief.')
+
 # ---------------- intake ----------------
 st.markdown('### Build your creative brief')
 motions = load_json('motions.json')
@@ -404,6 +431,7 @@ with st.form('request'):
             ebook = st.checkbox('eBook')
             onepager = st.checkbox('Sales one-pager')
         derivs = [name for name, selected in [('LinkedIn posts', linkedin), ('Ad copy', ads), ('Email nurture', email), ('Sales one-pager', onepager), ('Video script', video), ('eBook', ebook)] if selected]
+    include_crm = st.checkbox('Attach the selected fictional Salesforce-style brief to this workflow', value=False)
     st.markdown('**Creative direction & source material**')
     direction_col, upload_col = st.columns(2)
     with direction_col:
@@ -437,7 +465,7 @@ if submitted:
         except BriefSourceError as exc:
             st.error(f'Could not use the attached brief: {exc}')
             st.stop()
-    combined_direction = (direction.strip() + source_text).strip()
+    combined_direction = (direction.strip() + source_text + ('\n\n' + synthetic_brief if include_crm else '')).strip()
     if source_text:
         st.success(f'Brief extracted ({len(source_text):,} characters) and added to creative direction.')
     req = Request(title.strip(), asset, motion, funnel, combined_direction, derivs,
