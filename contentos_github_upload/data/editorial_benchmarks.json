@@ -1,0 +1,66 @@
+{
+  "purpose": "Editorial craft benchmarks only; never copy text, factual claims, or proprietary messaging into synthetic drafts.",
+  "status": "Curated from published portfolio links; full-text/video transcripts not ingested or evaluated.",
+  "references": [
+    {
+      "id": "ai-predictions",
+      "title": "AI + Data Predictions 2026",
+      "type": "report",
+      "source": "Snowflake",
+      "url": "https://www.snowflake.com/content/dam/snowflake-site/en/landing-pages/ai-and-data-predictions-2026/report-ai-data-predictions-2026.pdf",
+      "study": [
+        "executive framing",
+        "prediction-driven chapter organization",
+        "clear implications"
+      ]
+    },
+    {
+      "id": "radical-roi",
+      "title": "The Radical ROI of Gen AI",
+      "type": "research report",
+      "source": "Snowflake",
+      "url": "https://www.snowflake.com/content/dam/snowflake-site/en/landing-pages/radical-roi-ai/report-gen-ai-research-report.pdf",
+      "study": [
+        "research-led narrative",
+        "methodology transparency",
+        "findings versus interpretation"
+      ]
+    },
+    {
+      "id": "phish",
+      "title": "One Phish, Two Phish, Three Phish, Fraud Phish",
+      "type": "illustrated ebook",
+      "source": "Splunk",
+      "url": "https://media.erepublic.com/document/one-phish-two-phish-three-phish-fraud-phish.pdf",
+      "study": [
+        "creative hook",
+        "accessible explanation",
+        "memorable story arc"
+      ]
+    },
+    {
+      "id": "bloomberg-video",
+      "title": "Bloomberg Television interview production",
+      "type": "video",
+      "source": "Bloomberg",
+      "url": "https://www.youtube.com/watch?v=Vux0S6tHEag",
+      "study": [
+        "strong opening",
+        "interview pacing",
+        "clear narrative beats"
+      ]
+    },
+    {
+      "id": "observability",
+      "title": "How To Explain Observability to a Child",
+      "type": "illustrated guide",
+      "source": "Splunk",
+      "url": "https://www.splunk.com/en_us/resources/how-to-explain-observability-to-a-child.html",
+      "study": [
+        "audience adaptation",
+        "analogy",
+        "visual-first explanation"
+      ]
+    }
+  ]
+}
