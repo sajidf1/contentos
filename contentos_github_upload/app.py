@@ -161,7 +161,21 @@ div.stButton > button[kind="primary"]:hover,div.stFormSubmitButton > button[kind
 /* Standalone product layout: sidebar is intentionally unused. */
 [data-testid="stSidebar"],[data-testid="collapsedControl"],[data-testid="stSidebarCollapsedControl"] {display:none !important;}
 .block-container{max-width:1150px;}
-</style>""", unsafe_allow_html=True)
+
+/* Compact above-the-fold layout: prioritize the brief. */
+.block-container{padding-top:.45rem !important;padding-bottom:2.5rem;}
+.studio-header{padding:7px 0 9px;margin-bottom:9px;}
+.studio-hero{padding:17px 24px !important;margin-bottom:8px !important;}
+.studio-hero h1{font-size:clamp(1.7rem,2.55vw,2.35rem) !important;margin:0 0 6px !important;}
+.studio-hero p{font-size:.84rem;line-height:1.5;}
+.studio-hero .studio-kicker{font-size:.59rem;margin-bottom:5px;}
+.studio-hero .studio-steps{margin-top:10px;gap:5px;}
+.studio-hero .studio-steps span{padding:5px 9px;font-size:.61rem;}
+[data-testid="stVerticalBlock"]{gap:.45rem;}
+[data-testid="stExpander"]{border-radius:10px;}
+[data-testid="stHeadingWithActionElements"] h3{margin-top:.2rem;margin-bottom:.1rem;}
+[data-testid="stForm"]{padding:.8rem 1.15rem;}
+</style>""")
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
 
@@ -182,7 +196,7 @@ def daily_cap() -> DailyCap:
 
 def workflow_overview(res: dict | None) -> None:
     """Compact, accessible workflow overview."""
-    st.markdown('### The workflow')
+    st.markdown('**The workflow**')
     completed = res is not None
     passed = bool(res and res['passed'])
     attempts = len(res['attempts']) if res else 0
@@ -207,7 +221,7 @@ def workflow_overview(res: dict | None) -> None:
         else:
             st.warning(f'Quality gate not passed after {attempts} evaluation attempt(s) · Human review required')
     else:
-        st.caption('Complete the creative brief and run the workflow to see each stage progress.')
+        pass
 
 
 def scorecard(att: dict) -> None:
@@ -303,36 +317,25 @@ st.markdown("""
 <div class="studio-header"><div class="studio-brand">Content <b>Studio</b> <span aria-hidden="true">✦</span></div><div class="studio-header-meta">AN AGENTIC CONTENT OPERATIONS DEMO · 01 / 06</div></div>
 <div class="studio-hero">
   <div class="studio-kicker">EDITORIAL SYSTEMS / INTERACTIVE WORKFLOW</div>
-  <h1>Welcome to Content Studio.</h1>
-  <p>Turn a creative brief into a structured content workflow. Set your audience and goals, generate a draft, review its quality, and prepare channel-specific assets for editorial handoff.</p>
+  <h1>From brief to better content.</h1>
+  <p>Set your direction, generate a draft, review quality, and create channel-ready assets.</p>
   <div class="studio-steps" aria-label="Content workflow summary"><span>01 · Plan</span><span class="studio-arrow" aria-hidden="true">→</span><span>02 · Write</span><span class="studio-arrow" aria-hidden="true">→</span><span>03 · Review</span><span class="studio-arrow" aria-hidden="true">→</span><span>04 · Repurpose</span></div>
 </div>
 """, unsafe_allow_html=True)
-st.caption('START HERE · Select Demo templates (free) in the sidebar, choose a content type, complete the brief, and run the workflow.')
+st.caption('START HERE · Complete the creative brief below and select Run content workflow. This free demo uses templates; human review is required before publishing.')
 with st.expander('About this demonstration · fictional data and review limitations'):
     st.write('All personas, messaging, reference examples, reviewers, assignments, and handoffs are fictional or synthetic. Scores are illustrative, not actual legal or editorial approvals. Slack and Wrike handoffs are simulated. Google Docs-compatible downloads are local exports; the app does not access visitors’ Google accounts. The free mode uses templates, not a live AI model.')
 
 
 workflow_overview(st.session_state.get('res'))
 
-st.markdown('**DEMO MODE**')
-mode = st.selectbox('Choose how to run the workflow', [MODES[1], MODES[0], MODES[2]], label_visibility='collapsed')
+# Free template mode is the default; live mode remains in the engine for future use.
+mode = MODES[1]
 code = ''
 max_rev = 2
-if mode == MODES[2]:
-    with st.expander('Live generation settings', expanded=True):
-        if not live_ready:
-            st.warning('Live mode is not enabled on this deployment.')
-        elif require_code:
-            code = st.text_input('Access code', type='password')
-        max_rev = st.slider('Max revision loops', 0, 3, 2)
-        if live_ready:
-            st.caption(f'Session tokens used: {st.session_state.meter.used:,} / {st.session_state.meter.token_limit:,}')
-st.caption('Free demo uses templates · Human review is required before publishing.')
 
 # ---------------- intake ----------------
 st.markdown('### Build your creative brief')
-st.caption('Set the audience, format and editorial direction. Optional controls let you tailor the output.')
 motions = load_json('motions.json')
 with st.form('request'):
     a, b = st.columns(2)
