@@ -11,7 +11,7 @@ from dataclasses import asdict
 
 from .core import Request, context_for, demo_draft, demo_derivatives, handoff, score_text
 from .guard import BudgetExceeded, Meter
-from .skills import DIMENSIONS, RISKY_PHRASES, SKILLS, SYSTEM
+from .skills import DIMENSIONS, RISKY_PHRASES, SKILLS, SYSTEM, EDITORIAL_PRINCIPLES, ASSET_PLAYBOOKS, REVIEW_GUIDANCE
 
 DRAFT_MODEL = os.environ.get('CLAUDE_MODEL', 'claude-sonnet-5-5')
 JUDGE_MODEL = os.environ.get('CLAUDE_JUDGE_MODEL', 'claude-haiku-5-5')
@@ -57,14 +57,14 @@ def _brief(req: Request) -> str:
 def generate(client, meter, req: Request, model: str = DRAFT_MODEL) -> str:
     skill = SKILLS[req.asset_type]
     user = (f'{_brief(req)}\nLength: {skill["length"]}. Structure: {skill["shape"]}.\n'
-            f'<direction>{req.direction}</direction>\nReturn only the Markdown asset.')
+            f'Editorial principles: {EDITORIAL_PRINCIPLES}\n'\n            f'Asset-specific playbook: {ASSET_PLAYBOOKS[req.asset_type]}\n'\n            f'<direction>{req.direction}</direction>\nReturn only the Markdown asset.')
     return _call(client, meter, model, user, max_tokens=1800)
 
 
 def evaluate(client, meter, req: Request, draft: str, model: str = JUDGE_MODEL) -> dict:
     rubric = '\n'.join(f'- {k}: {v}' for k, v in DIMENSIONS.items())
     user = (f'Score the draft 0-100 on each dimension. Be strict and evidence-based.\n{rubric}\n\n'
-            f'Brief: {_brief(req)}\n'
+            f'Additional craft review criteria: {json.dumps(REVIEW_GUIDANCE)}\n'\n            f'Asset playbook: {ASSET_PLAYBOOKS[req.asset_type]}\n'\n            f'Brief: {_brief(req)}\n'
             'Return ONLY JSON: {"dimensions": {"<exact dimension name>": {"score": int, '
             '"evidence": "<=25 words pointing at the draft", "fix": "<=25 words, empty if score>=85"}}}\n'
             f'<draft>\n{draft}\n</draft>')
@@ -105,7 +105,7 @@ def revise(client, meter, req: Request, draft: str, ev: dict, model: str = DRAFT
     fixes = '\n'.join(f'- {k} ({d["score"]}): {d["fix"] or d["evidence"]}'
                       for k, d in ev['dimensions'].items() if d['score'] < 85)
     user = (f'{_brief(req)}\nRevise the draft to fix these reviewer findings without changing the asset '
-            f'type or title:\n{fixes}\nReturn only the revised Markdown.\n<draft>\n{draft}\n</draft>')
+            f'type or title:\n{fixes}\nEditorial principles: {EDITORIAL_PRINCIPLES}\n'\n            f'Asset playbook: {ASSET_PLAYBOOKS[req.asset_type]}\nReturn only the revised Markdown.\n<draft>\n{draft}\n</draft>')
     return _call(client, meter, model, user, max_tokens=1800)
 
 
