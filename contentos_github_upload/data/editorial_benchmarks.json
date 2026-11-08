@@ -1,6 +1,6 @@
 {
-  "purpose": "Editorial craft benchmarks only; never copy text, factual claims, or proprietary messaging into synthetic drafts.",
-  "status": "Curated from published portfolio links; full-text/video transcripts not ingested or evaluated.",
+  "purpose": "User-selected published portfolio work is the primary editorial craft benchmark for Content Studio. Derive original lessons about voice, narrative and structure; do not reproduce third-party publication text or unverified claims.",
+  "status": "Five published portfolio references are indexed by URL and editorial craft annotations. Full article text, PDFs and video transcripts have not been ingested, so full-text voice matching is not yet available.",
   "references": [
     {
       "id": "ai-predictions",
@@ -62,5 +62,17 @@
         "visual-first explanation"
       ]
     }
-  ]
+  ],
+  "grading_policy": {
+    "standard": "Portfolio-led B2B journalistic craft with AP-informed US English",
+    "criteria": [
+      "Journalistic hook grounded in a meaningful business tension",
+      "Inverted-pyramid prioritization of consequential information",
+      "Nut graf by paragraphs 3-5 in substantial narrative formats",
+      "Executive relevance and clear stakes",
+      "Evidence discipline, transparent attribution and no fabricated reporting",
+      "Distinctive analogy, pacing or explanatory craft where appropriate"
+    ],
+    "limits": "Grade against these explicitly documented portfolio-derived craft attributes, not purported textual similarity to source documents."
+  }
 }
