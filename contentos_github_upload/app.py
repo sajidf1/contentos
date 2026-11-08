@@ -15,12 +15,21 @@ from contentos.guard import BudgetExceeded, DailyCap, Meter
 
 st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦', layout='wide', initial_sidebar_state='collapsed')
 
-st.markdown(
-    "**Explore the other demos on GitHub:** "
-    "[Narrative Architect](https://github.com/sajidf1/contentos/tree/main/projects/narrative-architect) · "
-    "[Content Impact Lab](https://github.com/sajidf1/contentos/tree/main/projects/content-impact-lab)"
-)
-st.caption("These are public source-code demos, not separately hosted interactive apps. Their READMEs explain how to run them locally.")
+st.markdown("**Explore the other projects**")
+project_link_left, project_link_right = st.columns(2)
+with project_link_left:
+    st.link_button(
+        "Narrative Architect — GitHub ↗",
+        "https://github.com/sajidf1/contentos/tree/main/projects/narrative-architect",
+        width="stretch",
+    )
+with project_link_right:
+    st.link_button(
+        "Content Impact Lab — GitHub ↗",
+        "https://github.com/sajidf1/contentos/tree/main/projects/content-impact-lab",
+        width="stretch",
+    )
+st.caption("Separate Streamlit demos are prepared in the repository; live links will be added after publishing.")
 
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
