@@ -32,7 +32,7 @@ nav_left, nav_right = st.columns(2)
 with nav_left:
     st.link_button("Content Studio — live demo ↗", "https://content-studio-demo.streamlit.app/", use_container_width=True)
 with nav_right:
-    st.link_button("Content Impact Lab — GitHub ↗", "https://github.com/sajidf1/contentos/tree/main/projects/content-impact-lab", use_container_width=True)
+    st.link_button("Content Impact Lab — live demo ↗", "https://content-impact-lab.streamlit.app/", use_container_width=True)
 st.caption("The other project's GitHub page includes its deployment details. Direct live-demo links will be added once the public URLs are confirmed.")
 
 st.title("Narrative Architect")
