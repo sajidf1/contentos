@@ -46,7 +46,12 @@ def _brief(req: Request) -> str:
     ctx = context_for(req)
     return (f'Asset: {req.asset_type}. Title: {req.title}. GTM motion: {req.gtm_motion}. '
             f'Persona: {ctx["persona"]}. Funnel stage: {req.funnel}. '
-            f'Approved fictional themes: {", ".join(ctx["keywords"])}.')
+            f'Approved fictional themes: {", ".join(ctx["keywords"])}. '
+            f'Target word count: {req.target_words or "asset default"}. '
+            f'Additional audience detail: {req.audience or "use mapped persona"}. '
+            f'Tone: {req.tone}. Style: {req.style}. '
+            f'Optional outline: {req.outline or "none supplied"}. '
+            f'Additional instructions: {req.additional_instructions or "none"}.')
 
 
 def generate(client, meter, req: Request, model: str = DRAFT_MODEL) -> str:
