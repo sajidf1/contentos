@@ -15,9 +15,12 @@ from contentos.guard import BudgetExceeded, DailyCap, Meter
 
 st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦', layout='wide', initial_sidebar_state='collapsed')
 
-# Streamlit automatically discovers pages/ and renders its native page navigation.
-# Avoid st.page_link here: the deployed entrypoint may not be registered under
-# the literal 'app.py' path, which caused StreamlitPageNotFoundError.
+st.markdown(
+    "**Explore the other demos on GitHub:** "
+    "[Narrative Architect](https://github.com/sajidf1/contentos/tree/main/projects/narrative-architect) · "
+    "[Content Impact Lab](https://github.com/sajidf1/contentos/tree/main/projects/content-impact-lab)"
+)
+st.caption("These are public source-code demos, not separately hosted interactive apps. Their READMEs explain how to run them locally.")
 
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
