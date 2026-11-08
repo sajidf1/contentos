@@ -117,7 +117,7 @@ def revise(client, meter, req: Request, draft: str, ev: dict, model: str = DRAFT
 def derive(client, meter, req: Request, draft: str, model: str = JUDGE_MODEL) -> dict:
     if not req.derivatives:
         return {}
-    user = (f'{_brief(req)}\nFrom the approved draft, write one derivative per name (max 80 words each, '
+    user = (f'{_brief(req)}\nFrom the approved draft, write one derivative per requested name. LinkedIn posts, ad copy, email nurture and sales one-pagers should be concise (about 80 words each); a Video script should include scene/voiceover beats and an eBook should include a substantive chapter outline and sample opening. '
             f'no invented stats): {json.dumps(req.derivatives)}.\n'
             'Return ONLY a JSON object mapping each name to its copy.\n'
             f'<draft>\n{draft}\n</draft>')
