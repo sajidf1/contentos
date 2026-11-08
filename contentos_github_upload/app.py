@@ -24,11 +24,11 @@ with project_link_left:
     )
 with project_link_right:
     st.link_button(
-        "Content Impact Lab — GitHub ↗",
-        "https://github.com/sajidf1/contentos/tree/main/projects/content-impact-lab",
+        "Content Impact Lab — live demo ↗",
+        "https://content-impact-lab.streamlit.app/",
         width="stretch",
     )
-st.caption("Separate Streamlit demos are prepared in the repository; live links will be added after publishing.")
+st.caption("Explore the public demos; source code for all three projects is available on GitHub.")
 
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
