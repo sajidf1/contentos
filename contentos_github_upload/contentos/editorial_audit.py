@@ -66,7 +66,9 @@ def audit(text, req):
         narrative.append("Check inverted-pyramid ordering: lead with the most important substantiated point, then supporting evidence, context and implications.")
     else:
         narrative.append("Apply a strong journalistic hook where natural; do not force a long-form nut graf into short conversion copy.")
-    references = load_json("editorial_benchmarks.json")["references"]
+    library = load_json("editorial_benchmarks.json")
+    references = library["references"]
+    reviewed = [r for r in references if r.get("access") == "full_public_article_reviewed"]
     criteria = []
     for ref in references:
         for feature in ref.get("study", []):
