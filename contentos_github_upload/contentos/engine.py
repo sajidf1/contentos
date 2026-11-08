@@ -185,6 +185,6 @@ def run_demo(req: Request) -> dict:
     last = attempts[-1]
     return {'mode': 'demo', 'request': asdict(req), 'context': context_for(req), 'draft': draft,
             'attempts': attempts, 'best_attempt': last['attempt'], 'passed': last['passed'],
-            'score': last['score'], 'truncated': False, 'derivatives': demo_derivatives(req) if last['passed'] else {},
+            'score': last['score'], 'truncated': False, 'derivatives': demo_derivatives(req),
             'handoff': handoff(req, last['score']) if last['passed'] else None,
             'models': {}, 'usage': {'calls': 0, 'input_tokens': 0, 'output_tokens': 0}}
