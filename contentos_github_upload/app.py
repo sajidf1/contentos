@@ -51,6 +51,37 @@ div.stButton > button[kind="primary"]:hover,div.stFormSubmitButton > button[kind
 .studio-hero strong{color:#fff;}
 .studio-footnote{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.035em;color:#79756d;margin:4px 0 14px;}
 @media(max-width:760px){.block-container{padding-left:1rem;padding-right:1rem;padding-top:.7rem}.studio-header-meta{display:none}.studio-hero{padding:24px 20px}.studio-hero h1{font-size:2.2rem}[data-testid="stForm"]{padding:.85rem}}
+
+/* Contrast and accessibility: Streamlit's dark-theme tokens can leak into light surfaces. */
+[data-testid="stSidebar"],[data-testid="stSidebar"] *:not(svg):not(path) {color:#24231f;}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"],
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {color:#373630 !important;opacity:1 !important;}
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {color:#5a574f !important;}
+[data-testid="stSidebar"] [role="radiogroup"] label,
+[data-testid="stSidebar"] [role="radiogroup"] label span,
+[data-testid="stSidebar"] [role="radiogroup"] label p {color:#22211f !important;opacity:1 !important;}
+[data-testid="stSidebar"] [data-baseweb="slider"] [role="slider"] {background:#2145ff !important;border-color:#2145ff !important;}
+[data-testid="stSidebar"] [data-baseweb="slider"] [data-testid="stTickBar"] {color:#49463f !important;}
+[data-testid="stSidebar"] hr {border-color:#c8c3b8;}
+[data-testid="stAppViewContainer"] [data-testid="stCaptionContainer"],
+[data-testid="stAppViewContainer"] [data-testid="stCaptionContainer"] p {color:#615d55 !important;opacity:1 !important;}
+[data-testid="stAppViewContainer"] [data-testid="stVerticalBlockBorderWrapper"] [data-testid="stCaptionContainer"],
+[data-testid="stAppViewContainer"] [data-testid="stVerticalBlockBorderWrapper"] [data-testid="stCaptionContainer"] p {color:#625e55 !important;}
+[data-testid="stAppViewContainer"] [data-testid="stForm"] label,
+[data-testid="stAppViewContainer"] [data-testid="stForm"] label p,
+[data-testid="stAppViewContainer"] [data-testid="stForm"] [data-testid="stWidgetLabel"] {color:#292722 !important;opacity:1 !important;}
+[data-testid="stAppViewContainer"] [data-testid="stForm"] input,
+[data-testid="stAppViewContainer"] [data-testid="stForm"] textarea {color:#24231f !important;-webkit-text-fill-color:#24231f;}
+[data-testid="stAppViewContainer"] [data-testid="stForm"] input::placeholder,
+[data-testid="stAppViewContainer"] [data-testid="stForm"] textarea::placeholder {color:#767168 !important;opacity:1;}
+[data-testid="stAppViewContainer"] [data-testid="stExpander"] summary,
+[data-testid="stAppViewContainer"] [data-testid="stExpander"] summary p {color:#24231f !important;}
+[data-testid="stAppViewContainer"] [data-testid="stMetricLabel"] p {color:#4f4b44 !important;}
+[data-testid="stAppViewContainer"] [data-testid="stMetricValue"] {color:#171717 !important;}
+.studio-hero p {color:#e5e5df !important;}
+.studio-hero .studio-kicker {color:#d9ff43 !important;}
 </style>""", unsafe_allow_html=True)
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
