@@ -93,7 +93,7 @@ DIMENSIONS = {
     "Asset fit & structure": "Matches the requested asset type, structure and length.",
     "Actionability": "Concrete steps or takeaways and a clear next step.",
     "AP style & clarity": "Follow AP-informed US English conventions and favor concise, precise, attributed claims.",
-    "Portfolio craft alignment": "Assess executive framing, narrative pacing, audience adaptation and evidence discipline using portfolio metadata as craft benchmarks, never copied text.",
+    "Portfolio craft alignment": "Use the published portfolio as the primary editorial craft standard: journalistic hook, inverted pyramid, early nut graf when relevant, executive framing, narrative pacing, audience adaptation and evidence discipline. Current references are annotated metadata, not full text.",
 }
 
 RISKY_PHRASES = ["guaranteed", "100% compliant", "risk-free", "no risk", "proven to", "#1 "]
