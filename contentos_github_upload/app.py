@@ -82,6 +82,18 @@ div.stButton > button[kind="primary"]:hover,div.stFormSubmitButton > button[kind
 [data-testid="stAppViewContainer"] [data-testid="stMetricValue"] {color:#171717 !important;}
 .studio-hero p {color:#e5e5df !important;}
 .studio-hero .studio-kicker {color:#d9ff43 !important;}
+
+/* Welcome panel: lighter editorial card, stronger hierarchy and contrast. */
+.studio-hero{background:#fffdf7 !important;color:#171717 !important;border:1px solid #d8d4c9;border-left:5px solid #2145ff;box-shadow:0 8px 28px rgba(23,28,35,.045);padding:clamp(22px,2.7vw,34px) !important;}
+.studio-hero:after{width:140px;height:140px;right:-70px;top:-75px;border:24px solid rgba(33,69,255,.06);}
+.studio-hero h1{color:#171717 !important;font-size:clamp(2rem,3.1vw,2.85rem) !important;line-height:1.1 !important;margin:0 0 12px !important;}
+.studio-hero p{color:#48453e !important;font-size:.94rem;line-height:1.75;max-width:760px;}
+.studio-hero strong{color:#171717 !important;}
+.studio-hero .studio-kicker{color:#2145ff !important;font-weight:700;letter-spacing:.1em;}
+.studio-hero .studio-steps{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:20px;}
+.studio-hero .studio-steps span{font-family:'DM Mono',monospace;font-size:.67rem;color:#35332f;background:#f0eee6;border:1px solid #ddd9ce;padding:8px 11px;border-radius:100px;}
+.studio-hero .studio-steps .studio-arrow{background:none;border:0;padding:0;color:#827d72;}
+@media(max-width:760px){.studio-hero .studio-steps{gap:6px}.studio-hero .studio-steps span{font-size:.6rem;padding:7px 9px}}
 </style>""", unsafe_allow_html=True)
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
@@ -225,7 +237,8 @@ st.markdown("""
 <div class="studio-hero">
   <div class="studio-kicker">EDITORIAL SYSTEMS / INTERACTIVE WORKFLOW</div>
   <h1>Welcome to Content Studio.</h1>
-  <p>From the creative brief to quality review and channel-ready assets. Explore how a structured content operation connects <strong>strategy, drafting, editorial judgment and handoff</strong> in one workflow.</p>
+  <p>Turn a creative brief into a structured content workflow. Set your audience and goals, generate a draft, review its quality, and prepare channel-specific assets for editorial handoff.</p>
+  <div class="studio-steps" aria-label="Content workflow summary"><span>01 · Plan</span><span class="studio-arrow" aria-hidden="true">→</span><span>02 · Write</span><span class="studio-arrow" aria-hidden="true">→</span><span>03 · Review</span><span class="studio-arrow" aria-hidden="true">→</span><span>04 · Repurpose</span></div>
 </div>
 """, unsafe_allow_html=True)
 st.caption('START HERE · Select Demo templates (free) in the sidebar, choose a content type, complete the brief, and run the workflow.')
