@@ -320,7 +320,9 @@ def show(res: dict) -> None:
         for recommendation in preflight['seo']['recommendations']:
             st.write('• ' + recommendation)
         st.markdown('**Portfolio-informed editorial craft library**')
-        st.caption(f"{preflight['portfolio']['references']} published-work references provide craft themes such as executive framing, accessible explanation, research discipline and narrative pacing.")
+        st.caption(f"{preflight['portfolio']['reviewed_articles']} published articles analyzed at text level; {preflight['portfolio']['references']} total indexed portfolio references.")
+        for example in preflight['portfolio']['examples']:
+            st.markdown(f"**{example['title']}** — {example['analysis']}")
         st.caption(preflight['portfolio']['note'])
         st.caption(preflight['disclaimer'])
     st.download_button('Download editorial preflight (.json)', json.dumps(preflight, indent=2), file_name='editorial-preflight.json', mime='application/json')
