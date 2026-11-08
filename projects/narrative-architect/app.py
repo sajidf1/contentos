@@ -45,7 +45,7 @@ st.markdown("""
 <div class="studio-hero">
  <div class="studio-kicker">SOURCE-FIRST STORY PLANNING</div>
  <h1>From notes to a stronger story.</h1>
- <p>Build a structured story plan from fictional interview notes or your own non-confidential research.</p>
+ <p>Turn interview notes, research, or a rough editorial idea into a source-first story architecture. The planner identifies a starting hook, structures the narrative, surfaces evidence and reporting gaps, and creates a downloadable editorial brief. It uses your supplied material—not invented quotes or AI-generated reporting.</p>
  <div class="studio-steps"><span>01 · Source</span><span class="studio-arrow">→</span><span>02 · Structure</span><span class="studio-arrow">→</span><span>03 · Verify</span></div>
 </div>
 <div class="studio-topnav">
