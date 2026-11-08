@@ -7,6 +7,7 @@ import streamlit as st
 from docx import Document
 
 from contentos.core import Request, load_json
+from contentos.brief_sources import BriefSourceError, extract_upload, extract_public_google_doc
 from contentos.engine import DRAFT_MODEL, JUDGE_MODEL, run_demo, run_live
 from contentos.guard import BudgetExceeded, DailyCap, Meter
 
@@ -340,13 +341,17 @@ with st.form('request'):
         st.markdown('**Derivative assets** · select any')
         d1, d2 = st.columns(2)
         with d1:
-            linkedin = st.checkbox('LinkedIn posts', value=True)
+            linkedin = st.checkbox('LinkedIn posts', value=False)
+            video = st.checkbox('Video script')
             email = st.checkbox('Email nurture')
         with d2:
-            ads = st.checkbox('Ad copy', value=True)
+            ads = st.checkbox('Ad copy', value=False)
+            ebook = st.checkbox('eBook')
             onepager = st.checkbox('Sales one-pager')
-        derivs = [name for name, selected in [('LinkedIn posts', linkedin), ('Ad copy', ads), ('Email nurture', email), ('Sales one-pager', onepager)] if selected]
+        derivs = [name for name, selected in [('LinkedIn posts', linkedin), ('Ad copy', ads), ('Email nurture', email), ('Sales one-pager', onepager), ('Video script', video), ('eBook', ebook)] if selected]
         direction = st.text_area('Outline or creative direction', 'Focus on operational efficiency and measurable outcomes.', max_chars=1200)
+        source_file = st.file_uploader('Attach a brief (PDF or Word .docx)', type=['pdf', 'docx'], help='Extracts selectable text; max 8 MB, 50 PDF pages.')
+        source_url = st.text_input('Or link a Google Doc (link-accessible)', placeholder='https://docs.google.com/document/d/…/edit', help='Document must allow link-based text export. Private Docs require uploading a PDF or DOCX instead.')
     with st.expander('Creative brief · optional controls', expanded=True):
         c1, c2 = st.columns(2)
         with c1:
@@ -363,7 +368,20 @@ if submitted:
     if not title.strip():
         st.error('A title is required.')
         st.stop()
-    req = Request(title.strip(), asset, motion, funnel, direction.strip(), derivs,
+    source_text = ''
+    if source_file is not None or source_url.strip():
+        try:
+            if source_file is not None:
+                source_text += '\\n\\nUploaded brief (' + source_file.name + '):\\n' + extract_upload(source_file)
+            if source_url.strip():
+                source_text += '\\n\\nLinked Google Doc brief:\\n' + extract_public_google_doc(source_url)
+        except BriefSourceError as exc:
+            st.error(f'Could not use the attached brief: {exc}')
+            st.stop()
+    combined_direction = (direction.strip() + source_text).strip()
+    if source_text:
+        st.success(f'Brief extracted ({len(source_text):,} characters) and added to creative direction.')
+    req = Request(title.strip(), asset, motion, funnel, combined_direction, derivs,
                   target_words=int(target_words), outline=outline.strip(), tone=tone,
                   style=style, audience=audience.strip(), additional_instructions=additional_instructions.strip())
     if mode == MODES[0]:
