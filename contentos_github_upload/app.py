@@ -1,8 +1,10 @@
 import json
+from io import BytesIO
 import os
 from pathlib import Path
 
 import streamlit as st
+from docx import Document
 
 from contentos.core import Request, load_json
 from contentos.engine import DRAFT_MODEL, JUDGE_MODEL, run_demo, run_live
@@ -57,6 +59,29 @@ def scorecard(att: dict) -> None:
                 st.caption(f'Fix: {d["fix"]}')
 
 
+def docx_bytes(markdown: str) -> bytes:
+    doc = Document()
+    for line in markdown.splitlines():
+        clean = line.strip()
+        if not clean:
+            continue
+        if clean.startswith('### '):
+            doc.add_heading(clean[4:], level=3)
+        elif clean.startswith('## '):
+            doc.add_heading(clean[3:], level=2)
+        elif clean.startswith('# '):
+            doc.add_heading(clean[2:], level=1)
+        elif clean.startswith(('- ', '* ')):
+            doc.add_paragraph(clean[2:], style='List Bullet')
+        elif len(clean) > 3 and clean[0].isdigit() and '. ' in clean[:4]:
+            doc.add_paragraph(clean.split('. ', 1)[1], style='List Number')
+        else:
+            doc.add_paragraph(clean)
+    buf = BytesIO()
+    doc.save(buf)
+    return buf.getvalue()
+
+
 def show(res: dict) -> None:
     st.subheader('Workflow')
     st.graphviz_chart(workflow_dot(res))
@@ -79,8 +104,13 @@ def show(res: dict) -> None:
     with st.expander('Attempt history'):
         st.json(res['attempts'])
     st.subheader('Draft')
+    actual_words = len(res['draft'].split())
+    target_words = res.get('request', {}).get('target_words', 0)
+    st.caption(f'Draft length: {actual_words:,} words' + (f' · Requested: {target_words:,} words' if target_words else ''))
     st.markdown(res['draft'])
     st.download_button('Download draft (.md)', res['draft'], file_name='contentos-draft.md', mime='text/markdown')
+    st.download_button('Download for Google Docs (.docx)', docx_bytes(res['draft']), file_name='contentos-draft.docx', mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    st.caption('Upload the .docx to Google Drive and open it with Google Docs. Direct Google Drive creation requires separate authorization.')
     st.subheader('Derivative assets')
     if res['derivatives']:
         for name, copy in res['derivatives'].items():
@@ -137,13 +167,25 @@ with st.form('request'):
         funnel = st.selectbox('Funnel stage', ['Awareness', 'Consideration', 'Decision'], index=1)
         derivs = st.multiselect('Derivative assets', ['LinkedIn posts', 'Ad copy', 'Email nurture', 'Sales one-pager'], default=['LinkedIn posts', 'Ad copy'])
         direction = st.text_area('Outline or creative direction', 'Focus on operational efficiency and measurable outcomes.', max_chars=1200)
+    with st.expander('Creative brief · optional controls', expanded=True):
+        c1, c2 = st.columns(2)
+        with c1:
+            target_words = st.number_input('Target word count (0 = asset default)', min_value=0, max_value=10000, value=0, step=100)
+            tone = st.selectbox('Tone of voice', ['Clear and professional', 'Executive and authoritative', 'Conversational', 'Bold and persuasive', 'Educational and approachable', 'Thought leadership'])
+            audience = st.text_input('Audience details (optional)', placeholder='e.g. CFOs at mid-market SaaS companies')
+        with c2:
+            style = st.selectbox('Writing style', ['Practical and concise', 'Narrative and story-driven', 'Analytical and evidence-led', 'Step-by-step how-to', 'Editorial and opinionated'])
+            outline = st.text_area('Outline (optional)', placeholder='Paste section headings or a detailed outline', height=120)
+            additional_instructions = st.text_area('Additional instructions (optional)', placeholder='Must-cover points, things to avoid, preferred CTA', height=90)
     submitted = st.form_submit_button('Run content workflow', type='primary')
 
 if submitted:
     if not title.strip():
         st.error('A title is required.')
         st.stop()
-    req = Request(title.strip(), asset, motion, funnel, direction.strip(), derivs)
+    req = Request(title.strip(), asset, motion, funnel, direction.strip(), derivs,
+                  target_words=int(target_words), outline=outline.strip(), tone=tone,
+                  style=style, audience=audience.strip(), additional_instructions=additional_instructions.strip())
     if mode == MODES[0]:
         if SAMPLE.exists():
             st.session_state.res = json.loads(SAMPLE.read_text(encoding='utf-8'))
