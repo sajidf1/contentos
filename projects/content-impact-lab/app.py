@@ -45,7 +45,7 @@ st.markdown("""
 <div class="studio-hero">
  <div class="studio-kicker">CONTENT MEASUREMENT WORKFLOW</div>
  <h1>From content to clearer impact.</h1>
- <p>Explore how synthetic content investment and attribution assumptions change the picture.</p>
+ <p>Compare fictional B2B content programs, test how sourced versus influenced pipeline credit changes their apparent value, and model where an incremental budget might go. Interactive attribution controls, portfolio comparisons, and a downloadable scenario make the trade-offs visible. All numbers are synthetic; this is a decision sandbox, not an ROI forecast.</p>
  <div class="studio-steps"><span>01 · Compare</span><span class="studio-arrow">→</span><span>02 · Model</span><span class="studio-arrow">→</span><span>03 · Prioritize</span></div>
 </div>
 <div class="studio-topnav">
