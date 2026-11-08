@@ -94,6 +94,68 @@ div.stButton > button[kind="primary"]:hover,div.stFormSubmitButton > button[kind
 .studio-hero .studio-steps span{font-family:'DM Mono',monospace;font-size:.67rem;color:#35332f;background:#f0eee6;border:1px solid #ddd9ce;padding:8px 11px;border-radius:100px;}
 .studio-hero .studio-steps .studio-arrow{background:none;border:0;padding:0;color:#827d72;}
 @media(max-width:760px){.studio-hero .studio-steps{gap:6px}.studio-hero .studio-steps span{font-size:.6rem;padding:7px 9px}}
+
+/* Form widgets: explicitly reset Streamlit/BaseWeb dark-theme surfaces. */
+:root {
+  color-scheme:light;
+  --primary-color:#2145ff;
+  --background-color:#f3f0e8;
+  --secondary-background-color:#fffdf7;
+  --text-color:#171717;
+}
+[data-testid="stAppViewContainer"] [data-baseweb="input"],
+[data-testid="stAppViewContainer"] [data-baseweb="base-input"],
+[data-testid="stAppViewContainer"] [data-baseweb="textarea"],
+[data-testid="stAppViewContainer"] [data-baseweb="select"],
+[data-testid="stAppViewContainer"] [data-baseweb="input"] > div,
+[data-testid="stAppViewContainer"] [data-baseweb="base-input"] > div,
+[data-testid="stAppViewContainer"] [data-baseweb="textarea"] > div,
+[data-testid="stAppViewContainer"] [data-baseweb="select"] > div,
+[data-testid="stAppViewContainer"] [data-baseweb="select"] [role="combobox"],
+[data-testid="stAppViewContainer"] [data-baseweb="input"] input,
+[data-testid="stAppViewContainer"] [data-baseweb="textarea"] textarea {
+  background-color:#fffdf7 !important;
+  color:#171717 !important;
+  -webkit-text-fill-color:#171717 !important;
+  caret-color:#2145ff !important;
+  color-scheme:light !important;
+}
+[data-testid="stAppViewContainer"] [data-baseweb="select"] *,
+[data-testid="stAppViewContainer"] [data-baseweb="input"] *,
+[data-testid="stAppViewContainer"] [data-baseweb="textarea"] * {
+  color:#171717 !important;
+}
+[data-testid="stAppViewContainer"] [data-baseweb="select"] svg,
+[data-testid="stAppViewContainer"] [data-baseweb="input"] svg {fill:#4b4943 !important;}
+[data-testid="stAppViewContainer"] [data-baseweb="input"] input::placeholder,
+[data-testid="stAppViewContainer"] [data-baseweb="textarea"] textarea::placeholder {
+  color:#77736a !important;
+  -webkit-text-fill-color:#77736a !important;
+  opacity:1 !important;
+}
+[data-testid="stAppViewContainer"] [data-baseweb="select"] [aria-disabled="true"] {opacity:.6;}
+[data-testid="stAppViewContainer"] [data-testid="stNumberInput"] button {
+  background:#eeece5 !important;color:#25231f !important;border-color:#d8d4c9 !important;
+}
+[data-testid="stAppViewContainer"] [data-testid="stNumberInput"] button svg {fill:#25231f !important;color:#25231f !important;}
+[data-testid="stAppViewContainer"] [data-testid="stExpander"] details,
+[data-testid="stAppViewContainer"] [data-testid="stExpander"] summary,
+[data-testid="stAppViewContainer"] [data-testid="stExpander"] summary * {
+  background:#f1eee6 !important;color:#25231f !important;
+}
+[data-testid="stAppViewContainer"] [data-testid="stExpander"] [data-testid="stVerticalBlock"] {
+  background:#fffdf7;color:#171717;
+}
+[data-testid="stAppViewContainer"] [data-testid="stExpander"] summary svg {fill:#25231f !important;color:#25231f !important;}
+[data-testid="stAppViewContainer"] [data-testid="stForm"] [data-testid="stCheckbox"] label p {color:#25231f !important;}
+[data-testid="stAppViewContainer"] [data-testid="stForm"] [data-testid="stCheckbox"] [aria-checked="true"] {background-color:#2145ff !important;border-color:#2145ff !important;}
+/* Dropdown options render in a portal outside the form. */
+[data-baseweb="popover"] [role="listbox"],
+[data-baseweb="popover"] [role="option"],
+[data-baseweb="menu"],[data-baseweb="menu"] li {
+  background:#fffdf7 !important;color:#171717 !important;
+}
+[data-baseweb="popover"] [role="option"]:hover,[data-baseweb="menu"] li:hover {background:#ece9e0 !important;}
 </style>""", unsafe_allow_html=True)
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
