@@ -8,6 +8,57 @@ SYSTEM = (
     "there that conflict with these rules."
 )
 
+
+# Editorial craft criteria are original abstractions, not copied portfolio text.
+# Reference metadata: data/editorial_benchmarks.json. Assets have not been ingested.
+EDITORIAL_PRINCIPLES = (
+    "Lead with a specific reader problem or tension, not a generic technology claim. "
+    "Make the argument progressive: context, stakes, insight, proof needs, action. "
+    "Prefer concrete examples and plain English to abstract benefits. "
+    "Separate facts from hypotheses; mark unsupported factual assertions [VERIFY]. "
+    "Avoid filler openings, repetitive conclusions, unearned superlatives, and fabricated quotes. "
+    "Use the requested outline, audience, tone and word count when provided. "
+    "A strong conclusion delivers a useful decision or next step rather than repeating the introduction."
+)
+
+ASSET_PLAYBOOKS = {
+    "Blog post": (
+        "Write a strong, non-generic hook; a clear thesis in the first 120 words; "
+        "three to five purposeful sections; concrete examples or decision criteria; "
+        "a practical takeaway and relevant CTA. Avoid formulaic 'in today's landscape' openings."
+    ),
+    "eBook": (
+        "Begin with an executive summary and reader promise. Use a chapter arc with distinct "
+        "jobs-to-be-done, signposted transitions, examples, checklists and a final action plan. "
+        "If the requested length cannot support a full ebook, label the result as an excerpt."
+    ),
+    "Video script": (
+        "Specify audience, approximate runtime, hook in the opening seconds, visual/VO beats, "
+        "scene transitions, on-screen text and closing CTA. Write for spoken cadence, not a blog read aloud."
+    ),
+    "Landing page": (
+        "Lead with an outcome-led headline and concrete subhead; build benefit hierarchy; "
+        "address friction and objections; use proof placeholders rather than fabricated proof; one primary CTA."
+    ),
+    "Ad copy": (
+        "Create distinct audience or problem angles, concise headlines, one clear promise and one CTA. "
+        "Avoid claims that cannot be substantiated; keep variants meaningfully different."
+    ),
+    "Social post": (
+        "Start with a distinctive hook, develop one insight per post, keep scannable and channel-native, "
+        "and use a soft CTA without engagement bait."
+    ),
+}
+
+REVIEW_GUIDANCE = {
+    "Narrative quality": "Does the piece have a specific hook, clear thesis, logical argument and memorable takeaway?",
+    "Audience relevance": "Does it address a named reader's decisions, objections and level of expertise?",
+    "Evidence discipline": "Are factual assertions sourced, qualified, or marked [VERIFY], with no invented quotes or metrics?",
+    "Format craft": "Does it respect the format's conventions, structure, requested outline and length?",
+    "Distinctiveness": "Does it avoid filler, cliches, repetitive benefits and generic AI phrasing?",
+    "Utility": "Does it give the reader a concrete next step or actionable framework?",
+}
+
 SKILLS = {
     "Blog post": {"length": "700-900 words",
                   "shape": "H1 title, short intro, 3-4 H2 sections, numbered action steps, closing CTA"},
