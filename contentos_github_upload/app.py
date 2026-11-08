@@ -10,7 +10,15 @@ from contentos.core import Request, load_json
 from contentos.engine import DRAFT_MODEL, JUDGE_MODEL, run_demo, run_live
 from contentos.guard import BudgetExceeded, DailyCap, Meter
 
-st.set_page_config(page_title='ContentOS | Portfolio Edition', page_icon='🧠', layout='wide')
+st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦', layout='wide')
+st.markdown("""<style>
+.block-container {max-width: 1250px; padding-top: 2.2rem; padding-bottom: 4rem;}
+h1 {letter-spacing: -.035em; font-weight: 750 !important;}
+h2, h3 {letter-spacing: -.018em;}
+[data-testid="stForm"] {border-radius: 14px;}
+.stFormSubmitButton button[kind="primary"] {border-radius: 9px; font-weight: 650;}
+[data-testid="stMetric"] {border: 1px solid rgba(128,128,128,.23); border-radius: 12px; padding: 14px;}
+</style>""", unsafe_allow_html=True)
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
 
@@ -29,22 +37,34 @@ def daily_cap() -> DailyCap:
     return DailyCap(int(cfg('DAILY_RUN_CAP', '25')))
 
 
-def workflow_dot(res: dict | None) -> str:
-    done = res is not None
+def workflow_overview(res: dict | None) -> None:
+    """Compact, accessible workflow overview."""
+    st.subheader('Workflow overview')
+    completed = res is not None
     passed = bool(res and res['passed'])
-    n_rev = max(0, len(res['attempts']) - 1) if res else 0
-    fill = lambda ok: '#d1fae5' if ok else '#f3f4f6'
-    nodes = [('intake', 'Intake', done), ('gtm', 'GTM match', done), ('draft', 'Draft\\n(skill per asset)', done),
-             ('judge', 'Evaluate\\n(rubric + gate)', done), ('revise', f'Revise\\n({n_rev} used)', n_rev > 0),
-             ('derive', 'Derivatives', passed), ('handoff', 'Editorial handoff\\n(simulated)', passed),
-             ('human', 'Human review', done and not passed)]
-    lines = ['digraph G { rankdir=LR; bgcolor="transparent"; node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, color="#9ca3af"]; edge [color="#6b7280", fontsize=9, fontname="Helvetica"];']
-    for key, label, ok in nodes:
-        color = '#fde68a' if key == 'human' and ok else fill(ok)
-        lines.append(f'{key} [label="{label}", fillcolor="{color}"];')
-    lines += ['intake -> gtm -> draft -> judge;', 'judge -> revise [label="below threshold"];', 'revise -> judge;',
-              'judge -> derive [label="pass"]; derive -> handoff;', 'judge -> human [label="still failing", style=dashed];', '}']
-    return '\n'.join(lines)
+    attempts = len(res['attempts']) if res else 0
+    steps = [
+        ('01', 'Intake', 'Creative brief', completed),
+        ('02', 'Strategy', 'GTM & audience', completed),
+        ('03', 'Draft', 'Asset skill', completed),
+        ('04', 'Review', 'Quality gates', completed),
+        ('05', 'Derivatives', 'Channel assets', passed),
+        ('06', 'Handoff', 'Editorial queue', passed),
+    ]
+    cols = st.columns(6, gap='small')
+    for col, (number, title, detail, active) in zip(cols, steps):
+        with col:
+            with st.container(border=True):
+                st.caption(number + ('  ✓' if active else ''))
+                st.markdown('**' + title + '**')
+                st.caption(detail)
+    if completed:
+        if passed:
+            st.success(f'Quality gate passed · {attempts} evaluation attempt(s) · Simulated editorial handoff ready')
+        else:
+            st.warning(f'Quality gate not passed after {attempts} evaluation attempt(s) · Human review required')
+    else:
+        st.caption('Complete the creative brief and run the workflow to see each stage progress.')
 
 
 def scorecard(att: dict) -> None:
@@ -83,8 +103,7 @@ def docx_bytes(markdown: str) -> bytes:
 
 
 def show(res: dict) -> None:
-    st.subheader('Workflow')
-    st.graphviz_chart(workflow_dot(res))
+    workflow_overview(res)
     st.subheader('Matched GTM intelligence (fictional)')
     st.json(res['context'])
     best = next((a for a in res['attempts'] if a['attempt'] == res['best_attempt']), res['attempts'][-1])
@@ -138,8 +157,14 @@ require_code = cfg('REQUIRE_ACCESS_CODE', 'true').lower() != 'false'  # set fals
 live_ready = (cfg('ENABLE_LIVE_MODE').lower() == 'true' and bool(cfg('ANTHROPIC_API_KEY'))
               and (bool(cfg('ACCESS_CODE')) or not require_code))
 
-st.title('ContentOS · Agentic Content Operations')
-st.caption('Independent fictional portfolio project · No employer data, prompts, or production integrations')
+st.title('Content Studio')
+st.caption('An interactive demonstration of an agentic content workflow — from creative brief to quality review and editorial handoff.')
+with st.container(border=True):
+    st.markdown('#### Welcome to Content Studio')
+    st.write('Explore how a structured content operation connects strategy, drafting, quality checks, derivative assets, and editorial handoff.')
+    st.markdown('**How to use this demo:** Select **Demo templates (free)** in the sidebar, choose an asset and GTM motion, customize the brief, and click **Run content workflow**. Review the scorecard, draft, derivatives, and simulated handoff below.')
+    st.info('**Demo environment:** All personas, messaging, reference examples, reviewers, assignments, and handoffs are fictional or synthetic. Scores are illustrative, not actual legal or editorial approvals. No real Slack, Wrike, or Google Drive actions occur. The free mode uses templates, not a live AI model.')
+
 
 with st.sidebar:
     mode = st.radio('Execution mode', MODES)
@@ -228,7 +253,7 @@ if 'res' in st.session_state:
                 'Your form inputs apply only in Demo or Live mode.')
     show(st.session_state.res)
 else:
-    st.graphviz_chart(workflow_dot(None))
+    workflow_overview(None)
     st.info('Choose a mode in the sidebar, then run the workflow.')
 
 with st.expander('Reference library and implementation notes'):
