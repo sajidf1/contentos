@@ -20,6 +20,12 @@ class Request:
     funnel: str
     direction: str
     derivatives: list[str]
+    target_words: int = 0
+    outline: str = ''
+    tone: str = 'Clear and professional'
+    style: str = 'Practical and concise'
+    audience: str = ''
+    additional_instructions: str = ''
 
 
 def context_for(req: Request) -> dict:
@@ -73,6 +79,10 @@ You can use this framework to create a clear plan, identify ownership, and commu
 Requested direction: {req.direction or 'Use a clear, practical executive tone.'}
 Funnel stage: {req.funnel}. Target persona: {ctx['persona']}.
 '''
+    if req.outline.strip():
+        base += '\n## Supplied outline (editorial brief)\n\n' + req.outline.strip() + '\n'
+    if req.audience.strip() or req.additional_instructions.strip():
+        base += '\n## Additional brief requirements\n\n' + (req.audience.strip() or ctx['persona']) + ': ' + req.additional_instructions.strip() + '\n'
     if revision:
         base += '\n## Measurement and iteration\n\nYou can track stakeholder adoption, cycle time, and the quality of resulting decisions. Document assumptions and ask reviewers to validate all claims before publication.\n'
     return base
