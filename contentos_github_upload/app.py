@@ -12,7 +12,11 @@ from contentos.guard import BudgetExceeded, DailyCap, Meter
 
 st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦', layout='wide')
 st.markdown("""<style>
-.block-container {max-width: 1250px; padding-top: 2.2rem; padding-bottom: 4rem;}
+.block-container {max-width: 1250px; padding-top: .8rem; padding-bottom: 3rem;}
+[data-testid='stAppViewContainer'] {background: linear-gradient(180deg, rgba(52,100,160,.055), transparent 390px);}
+[data-testid='stSidebar'] {border-right: 1px solid rgba(128,128,128,.15);}
+[data-testid='stVerticalBlock'] {gap: .75rem;}
+[data-testid='stExpander'] {border-radius: 12px;}
 h1 {letter-spacing: -.035em; font-weight: 750 !important;}
 h2, h3 {letter-spacing: -.018em;}
 [data-testid="stForm"] {border-radius: 14px;}
@@ -103,7 +107,6 @@ def docx_bytes(markdown: str) -> bytes:
 
 
 def show(res: dict) -> None:
-    workflow_overview(res)
     st.subheader('Matched GTM intelligence (fictional)')
     st.json(res['context'])
     best = next((a for a in res['attempts'] if a['attempt'] == res['best_attempt']), res['attempts'][-1])
@@ -157,17 +160,18 @@ require_code = cfg('REQUIRE_ACCESS_CODE', 'true').lower() != 'false'  # set fals
 live_ready = (cfg('ENABLE_LIVE_MODE').lower() == 'true' and bool(cfg('ANTHROPIC_API_KEY'))
               and (bool(cfg('ACCESS_CODE')) or not require_code))
 
-st.title('Content Studio')
-st.caption('An interactive demonstration of an agentic content workflow — from creative brief to quality review and editorial handoff.')
 with st.container(border=True):
-    st.markdown('#### Welcome to Content Studio')
+    st.markdown('### Welcome to Content Studio')
+    st.caption('A demo agentic content workflow: brief → strategy → drafting → quality review → derivatives → handoff.')
     st.write('Explore how a structured content operation connects strategy, drafting, quality checks, derivative assets, and editorial handoff.')
     st.markdown('**How to use this demo:** Select **Demo templates (free)** in the sidebar, choose an asset and GTM motion, customize the brief, and click **Run content workflow**. Review the scorecard, draft, derivatives, and simulated handoff below.')
     st.info('**Demo environment:** All personas, messaging, reference examples, reviewers, assignments, and handoffs are fictional or synthetic. Scores are illustrative, not actual legal or editorial approvals. Slack and Wrike handoffs are simulated. Google Docs-compatible downloads are local exports; the app does not access visitor Google accounts. The free mode uses templates, not a live AI model.')
 
 
+workflow_overview(st.session_state.get('res'))
+
 with st.sidebar:
-    mode = st.radio('Execution mode', MODES)
+    mode = st.radio('Execution mode', MODES, index=1)
     code = ''
     if mode == MODES[2]:
         if not live_ready:
@@ -178,7 +182,6 @@ with st.sidebar:
             st.caption(f'Session tokens used: {st.session_state.meter.used:,} / {st.session_state.meter.token_limit:,}')
     max_rev = st.slider('Max revision loops', 0, 3, 2, disabled=mode != MODES[2])
     st.divider()
-    st.divider()
     st.caption('Pipeline: Intake → GTM → Draft → Evaluate → Revise (bounded) → Derivatives → Handoff. Human review is always required before publishing.')
 
 # ---------------- intake ----------------
@@ -186,12 +189,20 @@ motions = load_json('motions.json')
 with st.form('request'):
     a, b = st.columns(2)
     with a:
-        asset = st.selectbox('Primary asset', ['Blog post', 'eBook', 'Landing page', 'Video script', 'Ad copy', 'Social post'])
+        asset = st.selectbox('Primary content type', ['Blog post', 'Video script', 'eBook', 'Landing page', 'Ad copy', 'Social post'])
         title = st.text_input('Title', 'Building the business case for a unified data platform', max_chars=140)
         motion = st.selectbox('GTM motion', list(motions))
     with b:
         funnel = st.selectbox('Funnel stage', ['Awareness', 'Consideration', 'Decision'], index=1)
-        derivs = st.multiselect('Derivative assets', ['LinkedIn posts', 'Ad copy', 'Email nurture', 'Sales one-pager'], default=['LinkedIn posts', 'Ad copy'])
+        st.markdown('**Derivative assets** · select any')
+        d1, d2 = st.columns(2)
+        with d1:
+            linkedin = st.checkbox('LinkedIn posts', value=True)
+            email = st.checkbox('Email nurture')
+        with d2:
+            ads = st.checkbox('Ad copy', value=True)
+            onepager = st.checkbox('Sales one-pager')
+        derivs = [name for name, selected in [('LinkedIn posts', linkedin), ('Ad copy', ads), ('Email nurture', email), ('Sales one-pager', onepager)] if selected]
         direction = st.text_area('Outline or creative direction', 'Focus on operational efficiency and measurable outcomes.', max_chars=1200)
     with st.expander('Creative brief · optional controls', expanded=True):
         c1, c2 = st.columns(2)
@@ -254,8 +265,7 @@ if 'res' in st.session_state:
                 'Your form inputs apply only in Demo or Live mode.')
     show(st.session_state.res)
 else:
-    workflow_overview(None)
-    st.info('Choose a mode in the sidebar, then run the workflow.')
+    st.caption('Complete the brief above and select Run content workflow to preview the results.')
 
 with st.expander('Reference library and implementation notes'):
     st.json(load_json('reference_library.json'))
