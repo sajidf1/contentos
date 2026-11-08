@@ -42,9 +42,9 @@ def draft(req, revision=0):
     kind = req.asset_type
     if kind == "Blog post":
         sections = heads or ["The decision behind the opportunity", "Where teams get stuck", "A practical framework", "What to measure next"]
-        body = (f"# {req.title}\n\nThe hardest part of a business initiative is often not the technology. "
-                f"It's deciding what needs to change, who owns the decision, and what evidence would make the investment worthwhile. "
-                f"For {audience}, this piece explores {focus.lower()}.\n\n")
+        body = (f"# {req.title}\n\nA promising business initiative can stall at the first hard question: What decision will it actually improve?\n\n"
+                f"The answer matters more than a list of capabilities. Without an agreed outcome, teams can invest in activity without knowing whether it moved the business forward.\n\n"
+                f"For {audience}, the stakes are practical: {focus.lower()}. This article examines the decisions, evidence and ownership needed to turn that ambition into a measurable plan.\n\n")
         body += "\n\n".join(_section(h, audience, focus) for h in sections)
         body += "\n\n## The takeaway\n\nChoose one measurable outcome, establish a baseline, and make the next decision explicit. **Next step:** convene the stakeholders who will own the result."
     elif kind == "eBook":
