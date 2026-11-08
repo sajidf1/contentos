@@ -362,7 +362,7 @@ live_ready = (cfg('ENABLE_LIVE_MODE').lower() == 'true' and bool(cfg('ANTHROPIC_
 st.markdown("""
 <div class="studio-header"><div class="studio-brand">Content <b>Studio</b> <span aria-hidden="true">✦</span></div><div class="studio-header-meta">AN AGENTIC CONTENT OPERATIONS DEMO · 01 / 06</div></div>
 <div class="studio-hero">
-  <div class="studio-kicker">EDITORIAL SYSTEMS / INTERACTIVE WORKFLOW</div>
+  <div class="studio-kicker">AGENTIC CONTENT WORKFLOW</div>
   <h1>From brief to better content.</h1>
   <p>Set your direction, generate a draft, review quality, and create channel-ready assets.</p>
   <div class="studio-steps" aria-label="Content workflow summary"><span>01 · Plan</span><span class="studio-arrow" aria-hidden="true">→</span><span>02 · Write</span><span class="studio-arrow" aria-hidden="true">→</span><span>03 · Review</span><span class="studio-arrow" aria-hidden="true">→</span><span>04 · Repurpose</span></div>
