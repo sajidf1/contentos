@@ -175,7 +175,7 @@ div.stButton > button[kind="primary"]:hover,div.stFormSubmitButton > button[kind
 [data-testid="stExpander"]{border-radius:10px;}
 [data-testid="stHeadingWithActionElements"] h3{margin-top:.2rem;margin-bottom:.1rem;}
 [data-testid="stForm"]{padding:.8rem 1.15rem;}
-</style>""")
+</style>""", unsafe_allow_html=True)
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
 
