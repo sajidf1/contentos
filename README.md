@@ -28,6 +28,19 @@ This repository contains three demonstrations built to make that thinking tangib
 
 The source includes an **optional** Anthropic-powered path for private experimentation, but it is **not enabled in the free public demo**. Enabling it requires your own credentials and may incur API charges.
 
+## Publish two independent interactive demos
+
+Both standalone apps are **ready for free public Streamlit Community Cloud deployments** from this same repository. Each has its own dependency and theme configuration, fictional examples, and automated smoke tests.
+
+| New app | Branch | Main file path |
+| --- | --- | --- |
+| Narrative Architect | `main` | `projects/narrative-architect/app.py` |
+| Content Impact Lab | `main` | `projects/content-impact-lab/app.py` |
+
+At [share.streamlit.io](https://share.streamlit.io/), select **Create app → Yup, I have an app**, use repository `sajidf1/contentos`, branch `main`, and create one app per row. Keep them public and leave secrets blank. Streamlit will assign each app its own URL; **no link is considered live until Streamlit reports that deployment successful**. Then add those exact URLs to the portfolio and Content Studio navigation.
+
+See [Narrative Architect deployment details](projects/narrative-architect/README.md) and [Content Impact Lab deployment details](projects/content-impact-lab/README.md).
+
 ## Run locally
 
 ```bash
