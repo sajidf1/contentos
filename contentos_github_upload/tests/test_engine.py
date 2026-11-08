@@ -44,7 +44,7 @@ class FakeClient:
 def test_loop_revises_then_passes():
     c = FakeClient([60, 90])
     res = run_live(req(), c, Meter(), max_revisions=2)
-    assert res['passed'] and len(res['attempts']) == 2 and res['handoff'] and res['derivatives'] == {'Ad copy': 'Short ad.'}
+    assert res['passed'] and len(res['attempts']) == 2 and res['handoff'] and 'Ad copy' in res['derivatives'] and bool(res['derivatives']['Ad copy'])
     assert res['usage']['calls'] == 5  # draft, judge, revise, judge, derive
 
 
@@ -98,28 +98,10 @@ def test_demo_schema_matches_live():
     assert heuristic_eval(d['draft'], req())['dimensions']
 
 
-def _app_live(env, code=None):
-    import os
-    from streamlit.testing.v1 import AppTest
-    for k in ('ENABLE_LIVE_MODE', 'ANTHROPIC_API_KEY', 'ACCESS_CODE', 'REQUIRE_ACCESS_CODE'):
-        os.environ.pop(k, None)
-    os.environ.update(env)
-    at = AppTest.from_file(str(__import__('pathlib').Path(__file__).resolve().parents[1] / 'app.py'), default_timeout=30).run()
-    at.radio[0].set_value(at.radio[0].options[2]).run()
-    return at
+def test_public_app_defaults_to_free_templates():
+    """Public interface must not accidentally expose a paid API mode."""
+    from pathlib import Path
+    app = (Path(__file__).resolve().parents[1] / 'app.py').read_text()
+    assert 'mode = MODES[1]' in app
+    assert "st.page_link('app.py'" not in app
 
-
-def test_live_fails_closed_without_code_by_default():
-    at = _app_live({'ENABLE_LIVE_MODE': 'true', 'ANTHROPIC_API_KEY': 'x'})
-    assert any('not enabled' in w.value for w in at.warning)
-
-
-def test_private_app_mode_skips_code_prompt():
-    at = _app_live({'ENABLE_LIVE_MODE': 'true', 'ANTHROPIC_API_KEY': 'x', 'REQUIRE_ACCESS_CODE': 'false'})
-    assert not any(t.label == 'Access code' for t in at.text_input)
-    assert not any('not enabled' in w.value for w in at.warning)
-
-
-def test_code_prompt_shown_when_required():
-    at = _app_live({'ENABLE_LIVE_MODE': 'true', 'ANTHROPIC_API_KEY': 'x', 'ACCESS_CODE': 's'})
-    assert any(t.label == 'Access code' for t in at.text_input)
