@@ -12,16 +12,45 @@ from contentos.guard import BudgetExceeded, DailyCap, Meter
 
 st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦', layout='wide')
 st.markdown("""<style>
-.block-container {max-width: 1250px; padding-top: .8rem; padding-bottom: 3rem;}
-[data-testid='stAppViewContainer'] {background: linear-gradient(180deg, rgba(52,100,160,.055), transparent 390px);}
-[data-testid='stSidebar'] {border-right: 1px solid rgba(128,128,128,.15);}
-[data-testid='stVerticalBlock'] {gap: .75rem;}
-[data-testid='stExpander'] {border-radius: 12px;}
-h1 {letter-spacing: -.035em; font-weight: 750 !important;}
-h2, h3 {letter-spacing: -.018em;}
-[data-testid="stForm"] {border-radius: 14px;}
-.stFormSubmitButton button[kind="primary"] {border-radius: 9px; font-weight: 650;}
-[data-testid="stMetric"] {border: 1px solid rgba(128,128,128,.23); border-radius: 12px; padding: 14px;}
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
+:root {--studio-paper:#f3f0e8;--studio-ink:#171717;--studio-blue:#2145ff;--studio-acid:#d9ff43;--studio-line:#d8d4c9;}
+html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {background:var(--studio-paper) !important;color:var(--studio-ink);}
+html, body, p, label, button, input, textarea, [data-testid="stMarkdownContainer"] {font-family:'Manrope',Arial,sans-serif;}
+.block-container {max-width:1210px;padding-top:1rem;padding-bottom:3.5rem;}
+[data-testid="stHeader"] {background:transparent !important;}
+[data-testid="stSidebar"] {background:#eae7df !important;border-right:1px solid var(--studio-line);}
+[data-testid="stSidebar"] .block-container {padding-top:1.4rem;}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {font-size:.84rem;}
+[data-testid="stVerticalBlock"] {gap:.7rem;}
+h1,h2,h3 {color:var(--studio-ink);letter-spacing:-.045em !important;}
+h1,h2 {font-family:'Newsreader',Georgia,serif !important;font-weight:500 !important;}
+h3 {font-family:'Manrope',Arial,sans-serif;font-weight:750 !important;}
+[data-testid="stHeadingWithActionElements"] h2 {font-size:clamp(1.65rem,2.5vw,2.2rem);margin-top:.6rem;}
+[data-testid="stCaptionContainer"] {color:#68655e;}
+[data-testid="stVerticalBlockBorderWrapper"] > div {border-color:var(--studio-line) !important;border-radius:14px !important;background:rgba(255,255,255,.52);}
+[data-testid="stForm"] {border:1px solid var(--studio-line);border-radius:16px;background:rgba(255,255,255,.48);padding:1.1rem 1.35rem;}
+[data-testid="stForm"] label {font-size:.83rem;font-weight:700;}
+div[data-baseweb="input"] > div,div[data-baseweb="textarea"] > div,div[data-baseweb="select"] > div {background:#fffefa;border-color:var(--studio-line);border-radius:9px;}
+div[data-testid="stMetric"] {border:1px solid var(--studio-line);background:#fffefa;border-radius:12px;padding:14px 17px;}
+[data-testid="stMetricValue"] {font-family:'Newsreader',Georgia,serif;font-size:2.2rem;}
+div.stButton > button[kind="primary"],div.stFormSubmitButton > button[kind="primary"] {background:var(--studio-blue);border:1px solid var(--studio-blue);color:white;border-radius:100px;font-weight:800;padding:.7rem 1.7rem;min-height:46px;box-shadow:none;}
+div.stButton > button[kind="primary"]:hover,div.stFormSubmitButton > button[kind="primary"]:hover {background:#142fc4;border-color:#142fc4;color:white;}
+[data-testid="stDownloadButton"] button {border-radius:100px;border-color:#bcb7aa;background:#fffefa;font-weight:700;}
+[data-testid="stExpander"] {border:1px solid var(--studio-line);border-radius:12px;background:rgba(255,255,255,.4);}
+[data-testid="stProgressBar"] > div > div {background:var(--studio-blue);}
+[data-testid="stAlert"] {border-radius:11px;}
+.studio-header{border-top:3px solid var(--studio-blue);border-bottom:1px solid var(--studio-line);padding:12px 0 14px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:13px;}
+.studio-brand{font-weight:800;letter-spacing:-.055em;font-size:1.2rem;}
+.studio-brand b{color:var(--studio-blue);}
+.studio-header-meta{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.11em;color:#68655e;text-transform:uppercase;}
+.studio-hero{background:#171c23;color:#f3f0e8;border-radius:15px;padding:clamp(23px,3.2vw,40px);margin-bottom:16px;position:relative;overflow:hidden;}
+.studio-hero:after{content:'';position:absolute;width:190px;height:190px;right:-85px;top:-105px;border:30px solid rgba(217,255,67,.13);border-radius:50%;pointer-events:none;}
+.studio-kicker{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.12em;color:var(--studio-acid);margin-bottom:10px;}
+.studio-hero h1{font-family:'Newsreader',Georgia,serif !important;color:#f3f0e8;font-weight:500;font-size:clamp(2.15rem,4vw,3.3rem);line-height:1.04;margin:0 0 12px;letter-spacing:-.05em;}
+.studio-hero p{color:#d5d5d2;font-size:.9rem;line-height:1.65;max-width:730px;margin:0;}
+.studio-hero strong{color:#fff;}
+.studio-footnote{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.035em;color:#79756d;margin:4px 0 14px;}
+@media(max-width:760px){.block-container{padding-left:1rem;padding-right:1rem;padding-top:.7rem}.studio-header-meta{display:none}.studio-hero{padding:24px 20px}.studio-hero h1{font-size:2.2rem}[data-testid="stForm"]{padding:.85rem}}
 </style>""", unsafe_allow_html=True)
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
@@ -43,7 +72,7 @@ def daily_cap() -> DailyCap:
 
 def workflow_overview(res: dict | None) -> None:
     """Compact, accessible workflow overview."""
-    st.subheader('Workflow overview')
+    st.markdown('### The workflow')
     completed = res is not None
     passed = bool(res and res['passed'])
     attempts = len(res['attempts']) if res else 0
@@ -107,10 +136,10 @@ def docx_bytes(markdown: str) -> bytes:
 
 
 def show(res: dict) -> None:
-    st.subheader('Matched GTM intelligence (fictional)')
-    st.json(res['context'])
+    with st.expander('01 / Strategy intelligence · fictional GTM context'):
+        st.json(res['context'])
     best = next((a for a in res['attempts'] if a['attempt'] == res['best_attempt']), res['attempts'][-1])
-    st.subheader('Quality scorecard')
+    st.markdown('### 02 / Editorial quality review')
     c1, c2, c3 = st.columns(3)
     c1.metric('Overall score', f'{res["score"]}/100', 'Pass' if res['passed'] else 'Needs human revision', delta_color='off')
     c2.metric('Attempts', len(res['attempts']))
@@ -125,7 +154,7 @@ def show(res: dict) -> None:
         st.line_chart({'score': [a['score'] for a in res['attempts']]})
     with st.expander('Attempt history'):
         st.json(res['attempts'])
-    st.subheader('Draft')
+    st.markdown('### 03 / Your draft')
     actual_words = len(res['draft'].split())
     target_words = res.get('request', {}).get('target_words', 0)
     st.caption(f'Draft length: {actual_words:,} words' + (f' · Requested: {target_words:,} words' if target_words else ''))
@@ -133,14 +162,14 @@ def show(res: dict) -> None:
     st.download_button('Download draft (.md)', res['draft'], file_name='contentos-draft.md', mime='text/markdown')
     st.download_button('Download for Google Docs (.docx)', docx_bytes(res['draft']), file_name='contentos-draft.docx', mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     st.caption('To edit in Google Docs: download the .docx, upload it to your Google Drive, and open it with Google Docs. No account connection or billing required in this app.')
-    st.subheader('Derivative assets')
+    st.markdown('### 04 / Channel derivatives')
     if res['derivatives']:
         for name, copy in res['derivatives'].items():
             with st.expander(name):
                 st.write(copy)
     else:
         st.caption('Derivatives are generated only after a draft passes review.')
-    st.subheader('Editorial handoff (simulated)')
+    st.markdown('### 05 / Editorial handoff (simulated)')
     if res['handoff']:
         a, b = st.columns(2)
         a.json(res['handoff']['ticket'])
@@ -160,17 +189,23 @@ require_code = cfg('REQUIRE_ACCESS_CODE', 'true').lower() != 'false'  # set fals
 live_ready = (cfg('ENABLE_LIVE_MODE').lower() == 'true' and bool(cfg('ANTHROPIC_API_KEY'))
               and (bool(cfg('ACCESS_CODE')) or not require_code))
 
-with st.container(border=True):
-    st.markdown('### Welcome to Content Studio')
-    st.caption('A demo agentic content workflow: brief → strategy → drafting → quality review → derivatives → handoff.')
-    st.write('Explore how a structured content operation connects strategy, drafting, quality checks, derivative assets, and editorial handoff.')
-    st.markdown('**How to use this demo:** Select **Demo templates (free)** in the sidebar, choose an asset and GTM motion, customize the brief, and click **Run content workflow**. Review the scorecard, draft, derivatives, and simulated handoff below.')
-    st.info('**Demo environment:** All personas, messaging, reference examples, reviewers, assignments, and handoffs are fictional or synthetic. Scores are illustrative, not actual legal or editorial approvals. Slack and Wrike handoffs are simulated. Google Docs-compatible downloads are local exports; the app does not access visitor Google accounts. The free mode uses templates, not a live AI model.')
+st.markdown("""
+<div class="studio-header"><div class="studio-brand">Content <b>Studio</b> <span aria-hidden="true">✦</span></div><div class="studio-header-meta">AN AGENTIC CONTENT OPERATIONS DEMO · 01 / 06</div></div>
+<div class="studio-hero">
+  <div class="studio-kicker">EDITORIAL SYSTEMS / INTERACTIVE WORKFLOW</div>
+  <h1>Welcome to Content Studio.</h1>
+  <p>From the creative brief to quality review and channel-ready assets. Explore how a structured content operation connects <strong>strategy, drafting, editorial judgment and handoff</strong> in one workflow.</p>
+</div>
+""", unsafe_allow_html=True)
+st.caption('START HERE · Select Demo templates (free) in the sidebar, choose a content type, complete the brief, and run the workflow.')
+with st.expander('About this demonstration · fictional data and review limitations'):
+    st.write('All personas, messaging, reference examples, reviewers, assignments, and handoffs are fictional or synthetic. Scores are illustrative, not actual legal or editorial approvals. Slack and Wrike handoffs are simulated. Google Docs-compatible downloads are local exports; the app does not access visitors’ Google accounts. The free mode uses templates, not a live AI model.')
 
 
 workflow_overview(st.session_state.get('res'))
 
 with st.sidebar:
+    st.markdown('**WORKSPACE SETTINGS**')
     mode = st.radio('Execution mode', MODES, index=1)
     code = ''
     if mode == MODES[2]:
@@ -185,6 +220,8 @@ with st.sidebar:
     st.caption('Pipeline: Intake → GTM → Draft → Evaluate → Revise (bounded) → Derivatives → Handoff. Human review is always required before publishing.')
 
 # ---------------- intake ----------------
+st.markdown('### Build your creative brief')
+st.caption('Set the audience, format and editorial direction. Optional controls let you tailor the output.')
 motions = load_json('motions.json')
 with st.form('request'):
     a, b = st.columns(2)
@@ -214,7 +251,7 @@ with st.form('request'):
             style = st.selectbox('Writing style', ['Practical and concise', 'Narrative and story-driven', 'Analytical and evidence-led', 'Step-by-step how-to', 'Editorial and opinionated'])
             outline = st.text_area('Outline (optional)', placeholder='Paste section headings or a detailed outline', height=120)
             additional_instructions = st.text_area('Additional instructions (optional)', placeholder='Must-cover points, things to avoid, preferred CTA', height=90)
-    submitted = st.form_submit_button('Run content workflow', type='primary')
+    submitted = st.form_submit_button('Run content workflow  →', type='primary')
 
 if submitted:
     if not title.strip():
