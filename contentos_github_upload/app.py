@@ -1,6 +1,7 @@
 import json
 from io import BytesIO
 import os
+import time
 from pathlib import Path
 
 import streamlit as st
@@ -9,6 +10,7 @@ from docx import Document
 from contentos.core import Request, load_json
 from contentos.engine import DRAFT_MODEL, JUDGE_MODEL, run_demo, run_live
 from contentos.guard import BudgetExceeded, DailyCap, Meter
+from contentos.google_drive import configured as google_configured, authorization_url, exchange_callback, create_google_doc
 
 st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦', layout='wide')
 st.markdown("""<style>
@@ -129,7 +131,22 @@ def show(res: dict) -> None:
     st.markdown(res['draft'])
     st.download_button('Download draft (.md)', res['draft'], file_name='contentos-draft.md', mime='text/markdown')
     st.download_button('Download for Google Docs (.docx)', docx_bytes(res['draft']), file_name='contentos-draft.docx', mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    st.caption('Upload the .docx to Google Drive and open it with Google Docs. Direct Google Drive creation requires separate authorization.')
+    st.caption('Download the .docx to edit in Google Docs, or connect your own Google Drive to create a native Google Doc.')
+    if google_configured(cfg):
+        token = st.session_state.get('google_access_token')
+        if token and st.session_state.get('google_token_expires', 0) > time.time() + 30:
+            if st.button('Create Google Doc in my Drive', type='primary'):
+                try:
+                    with st.spinner('Creating a Google Doc in your Drive…'):
+                        doc_url = create_google_doc(token, res.get('request', {}).get('title', 'Content Studio draft'), res['draft'])
+                    st.success('Your Google Doc was created in your Google Drive.')
+                    st.link_button('Open Google Doc', doc_url)
+                except Exception:
+                    st.error('Google Docs creation failed. Your draft is still available for download. Reconnect Google Drive and retry.')
+        else:
+            st.caption('Connect your Google account in the sidebar to create a native Google Doc.')
+    else:
+        st.caption('Google Docs connection is awaiting administrator OAuth configuration.')
     st.subheader('Derivative assets')
     if res['derivatives']:
         for name, copy in res['derivatives'].items():
@@ -147,6 +164,25 @@ def show(res: dict) -> None:
     if res.get('models'):
         st.caption(f'Models: draft={res["models"]["draft"]}, judge={res["models"]["judge"]} · usage={res["usage"]}')
 
+
+# Process Google OAuth callback before displaying the app.
+if 'error' in st.query_params and 'state' in st.query_params:
+    st.query_params.clear()
+    st.warning('Google authorization was declined or could not be completed.')
+if 'code' in st.query_params and 'state' in st.query_params:
+    oauth_code = st.query_params.get('code', '')
+    oauth_state = st.query_params.get('state', '')
+    st.query_params.clear()
+    if google_configured(cfg):
+        try:
+            token, expires_in = exchange_callback(cfg, oauth_code, oauth_state)
+            st.session_state.google_access_token = token
+            st.session_state.google_token_expires = time.time() + expires_in
+            st.success('Google Drive connected. Run a workflow, then select Create Google Doc.')
+        except Exception:
+            st.error('Google authorization failed or expired. Please connect again.')
+    else:
+        st.error('Google Drive is not configured on this deployment.')
 
 # ---------------- sidebar ----------------
 if 'meter' not in st.session_state:
@@ -177,6 +213,20 @@ with st.sidebar:
                 code = st.text_input('Access code', type='password')
             st.caption(f'Session tokens used: {st.session_state.meter.used:,} / {st.session_state.meter.token_limit:,}')
     max_rev = st.slider('Max revision loops', 0, 3, 2, disabled=mode != MODES[2])
+    st.divider()
+    st.markdown('**Google Drive · optional**')
+    if google_configured(cfg):
+        if st.session_state.get('google_access_token') and st.session_state.get('google_token_expires', 0) > time.time() + 30:
+            st.success('Google Drive connected for this session')
+            if st.button('Disconnect Google Drive'):
+                st.session_state.pop('google_access_token', None)
+                st.session_state.pop('google_token_expires', None)
+                st.rerun()
+        else:
+            st.link_button('Connect my Google Drive', authorization_url(cfg))
+            st.caption('Permission is limited to files created or opened by this app.')
+    else:
+        st.caption('Google Docs connection not yet configured.')
     st.divider()
     st.caption('Pipeline: Intake → GTM → Draft → Evaluate → Revise (bounded) → Derivatives → Handoff. Human review is always required before publishing.')
 
