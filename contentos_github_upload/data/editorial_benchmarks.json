@@ -1,6 +1,6 @@
 {
   "purpose": "User-selected published portfolio work is the primary editorial craft benchmark for Content Studio. Derive original lessons about voice, narrative and structure; do not reproduce third-party publication text or unverified claims.",
-  "status": "Five published portfolio references are indexed by URL and editorial craft annotations. Full article text, PDFs and video transcripts have not been ingested, so full-text voice matching is not yet available.",
+  "status": "Three public executive articles were reviewed at the article-text level and analyzed for openings, nut grafs, progression and endings. Five original references remain metadata-only because PDFs or video transcripts were inaccessible in this session. No full-text source copies are stored.",
   "references": [
     {
       "id": "ai-predictions",
@@ -61,6 +61,51 @@
         "analogy",
         "visual-first explanation"
       ]
+    },
+    {
+      "id": "predictions-ai-age-2024",
+      "title": "Predictions for the Dawning AI Age: What to Expect in 2024 and Beyond",
+      "type": "executive blog",
+      "source": "Snowflake",
+      "url": "https://www.snowflake.com/en/blog/predictions-ai-age-2024/",
+      "access": "full_public_article_reviewed",
+      "study": [
+        "timely news peg in first paragraph",
+        "nut graf by third paragraph connects the year ahead to enterprise decisions",
+        "prediction bullets deliver evidence and scannability",
+        "widening lens from enterprise applications to societal consequences"
+      ],
+      "analysis": "Opens on a specific transition year, contrasts hype with enterprise reality, establishes the purpose of the predictions report in paragraph three, then prioritizes the most consequential predictions before broader implications."
+    },
+    {
+      "id": "agentic-enterprise",
+      "title": "Powering the Era of the Agentic Enterprise",
+      "type": "executive blog",
+      "source": "Snowflake",
+      "url": "https://www.snowflake.com/en/blog/agentic-enterprise-control-plane/",
+      "access": "full_public_article_reviewed",
+      "study": [
+        "hypothetical future-state hook grounded immediately in current adoption",
+        "problem and significance established in paragraphs two and three",
+        "solution appears after the stakes",
+        "four-part framework with concrete enterprise examples"
+      ],
+      "analysis": "Opens with a near-future scenario, immediately describes fragmentation and governance concerns, then names the strategic consequence by paragraph three. Sections progress from the problem to the architecture, examples and implications."
+    },
+    {
+      "id": "100-customers",
+      "title": "What I Learned from Meeting 100 Customers in 100 Days",
+      "type": "executive blog",
+      "source": "Splunk",
+      "url": "https://www.splunk.com/en_us/blog/leadership/what-i-learned-from-meeting-100-customers-in-100-days.html",
+      "access": "full_public_article_reviewed",
+      "study": [
+        "specific first-person reporting premise",
+        "purpose and reader relevance in second paragraph",
+        "customer themes organized by business stakes",
+        "human and conversational ending"
+      ],
+      "analysis": "Begins with a concrete reporting exercise, moves immediately to lessons learned, then organizes findings by customer challenges, security pressures and opportunities for improvement. The close invites dialogue rather than repeating product claims."
     }
   ],
   "grading_policy": {
@@ -73,6 +118,6 @@
       "Evidence discipline, transparent attribution and no fabricated reporting",
       "Distinctive analogy, pacing or explanatory craft where appropriate"
     ],
-    "limits": "Grade against these explicitly documented portfolio-derived craft attributes, not purported textual similarity to source documents."
+    "limits": "Three reviewed articles provide evidence-backed structural observations. Other references remain metadata-only. No transcript analysis or corpus-wide style similarity is claimed."
   }
 }
