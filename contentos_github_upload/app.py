@@ -270,4 +270,5 @@ else:
 with st.expander('Reference library and implementation notes'):
     st.json(load_json('reference_library.json'))
     st.markdown('Reference library entries are fictional metadata, not retrieval-augmented generation. '
+                'Published portfolio links are reference metadata only, not full-text retrieval or automated grading. '
                 'Handoffs are simulated; no outbound Wrike or Slack actions occur.')
