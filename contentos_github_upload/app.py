@@ -372,9 +372,9 @@ if submitted:
     if source_file is not None or source_url.strip():
         try:
             if source_file is not None:
-                source_text += '\\n\\nUploaded brief (' + source_file.name + '):\\n' + extract_upload(source_file)
+                source_text += '\n\nUploaded brief (' + source_file.name + '):\n' + extract_upload(source_file)
             if source_url.strip():
-                source_text += '\\n\\nLinked Google Doc brief:\\n' + extract_public_google_doc(source_url)
+                source_text += '\n\nLinked Google Doc brief:\n' + extract_public_google_doc(source_url)
         except BriefSourceError as exc:
             st.error(f'Could not use the attached brief: {exc}')
             st.stop()
