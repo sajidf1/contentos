@@ -18,6 +18,16 @@ jobs:
         run: pip install -r contentos_github_upload/requirements.txt
       - name: Check Python syntax
         run: python -m compileall -q contentos_github_upload projects
+      - name: Smoke-test standalone demo pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for path in [Path('projects/narrative-architect/app.py'), Path('projects/content-impact-lab/app.py')]:
+              assert path.exists(), path
+              compile(path.read_text(), str(path), 'exec')
+          for path in Path('contentos_github_upload/pages').glob('*.py'):
+              compile(path.read_text(), str(path), 'exec')
+          PY
       - name: Run Content Studio tests
         working-directory: contentos_github_upload
         run: python -m pytest -q
