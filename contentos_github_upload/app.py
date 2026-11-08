@@ -199,7 +199,7 @@ with st.container(border=True):
     st.markdown('#### Welcome to Content Studio')
     st.write('Explore how a structured content operation connects strategy, drafting, quality checks, derivative assets, and editorial handoff.')
     st.markdown('**How to use this demo:** Select **Demo templates (free)** in the sidebar, choose an asset and GTM motion, customize the brief, and click **Run content workflow**. Review the scorecard, draft, derivatives, and simulated handoff below.')
-    st.info('**Demo environment:** All personas, messaging, reference examples, reviewers, assignments, and handoffs are fictional or synthetic. Scores are illustrative, not actual legal or editorial approvals. No real Slack, Wrike, or Google Drive actions occur. The free mode uses templates, not a live AI model.')
+    st.info('**Demo environment:** All personas, messaging, reference examples, reviewers, assignments, and handoffs are fictional or synthetic. Scores are illustrative, not actual legal or editorial approvals. Slack and Wrike handoffs are simulated. Google Docs creation is real only after a visitor explicitly connects Google Drive and requests it. The free mode uses templates, not a live AI model.')
 
 
 with st.sidebar:
