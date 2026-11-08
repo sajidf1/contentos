@@ -18,7 +18,7 @@ st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦',
 # Streamlit discovers both additional demos from the pages/ directory.
 with st.sidebar:
     st.markdown('### Explore all three demos')
-    st.page_link('app.py', label='Content Studio', icon='✦')
+    st.page_link('app.py', label='Content Studio', icon='🧩')
     st.page_link('pages/1_Narrative_Architect.py', label='Narrative Architect', icon='📰')
     st.page_link('pages/2_Content_Impact_Lab.py', label='Content Impact Lab', icon='📈')
     st.caption('Free demonstrations; fictional inputs and no live AI in public mode.')
