@@ -11,7 +11,7 @@ from dataclasses import asdict
 
 from .core import Request, context_for, demo_draft, demo_derivatives, handoff, score_text
 from .guard import BudgetExceeded, Meter
-from .skills import DIMENSIONS, RISKY_PHRASES, SKILLS, SYSTEM, EDITORIAL_PRINCIPLES, ASSET_PLAYBOOKS, REVIEW_GUIDANCE
+from .skills import DIMENSIONS, RISKY_PHRASES, SKILLS, SYSTEM, EDITORIAL_PRINCIPLES, ASSET_PLAYBOOKS, REVIEW_GUIDANCE, JOURNALISTIC_B2B_STANDARD
 
 DRAFT_MODEL = os.environ.get('CLAUDE_MODEL', 'claude-sonnet-5-5')
 JUDGE_MODEL = os.environ.get('CLAUDE_JUDGE_MODEL', 'claude-haiku-5-5')
