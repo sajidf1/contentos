@@ -11,7 +11,7 @@ from contentos.brief_sources import BriefSourceError, extract_upload, extract_pu
 from contentos.engine import DRAFT_MODEL, JUDGE_MODEL, run_demo, run_live
 from contentos.guard import BudgetExceeded, DailyCap, Meter
 
-st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦', layout='wide')
+st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦', layout='wide', initial_sidebar_state='collapsed')
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
 :root {--studio-paper:#f3f0e8;--studio-ink:#171717;--studio-blue:#2145ff;--studio-acid:#d9ff43;--studio-line:#d8d4c9;}
@@ -157,6 +157,10 @@ div.stButton > button[kind="primary"]:hover,div.stFormSubmitButton > button[kind
   background:#fffdf7 !important;color:#171717 !important;
 }
 [data-baseweb="popover"] [role="option"]:hover,[data-baseweb="menu"] li:hover {background:#ece9e0 !important;}
+
+/* Standalone product layout: sidebar is intentionally unused. */
+[data-testid="stSidebar"],[data-testid="collapsedControl"],[data-testid="stSidebarCollapsedControl"] {display:none !important;}
+.block-container{max-width:1150px;}
 </style>""", unsafe_allow_html=True)
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
@@ -311,20 +315,20 @@ with st.expander('About this demonstration · fictional data and review limitati
 
 workflow_overview(st.session_state.get('res'))
 
-with st.sidebar:
-    st.markdown('**WORKSPACE SETTINGS**')
-    mode = st.radio('Execution mode', MODES, index=1)
-    code = ''
-    if mode == MODES[2]:
+st.markdown('**DEMO MODE**')
+mode = st.selectbox('Choose how to run the workflow', [MODES[1], MODES[0], MODES[2]], label_visibility='collapsed')
+code = ''
+max_rev = 2
+if mode == MODES[2]:
+    with st.expander('Live generation settings', expanded=True):
         if not live_ready:
             st.warning('Live mode is not enabled on this deployment.')
-        else:
-            if require_code:
-                code = st.text_input('Access code', type='password')
+        elif require_code:
+            code = st.text_input('Access code', type='password')
+        max_rev = st.slider('Max revision loops', 0, 3, 2)
+        if live_ready:
             st.caption(f'Session tokens used: {st.session_state.meter.used:,} / {st.session_state.meter.token_limit:,}')
-    max_rev = st.slider('Max revision loops', 0, 3, 2, disabled=mode != MODES[2])
-    st.divider()
-    st.caption('Pipeline: Intake → GTM → Draft → Evaluate → Revise (bounded) → Derivatives → Handoff. Human review is always required before publishing.')
+st.caption('Free demo uses templates · Human review is required before publishing.')
 
 # ---------------- intake ----------------
 st.markdown('### Build your creative brief')
@@ -349,10 +353,14 @@ with st.form('request'):
             ebook = st.checkbox('eBook')
             onepager = st.checkbox('Sales one-pager')
         derivs = [name for name, selected in [('LinkedIn posts', linkedin), ('Ad copy', ads), ('Email nurture', email), ('Sales one-pager', onepager), ('Video script', video), ('eBook', ebook)] if selected]
-        direction = st.text_area('Outline or creative direction', 'Focus on operational efficiency and measurable outcomes.', max_chars=1200)
+    st.markdown('**Creative direction & source material**')
+    direction_col, upload_col = st.columns(2)
+    with direction_col:
+        direction = st.text_area('Outline or creative direction', 'Focus on operational efficiency and measurable outcomes.', max_chars=1200, height=130)
+    with upload_col:
         source_file = st.file_uploader('Attach a brief (PDF or Word .docx)', type=['pdf', 'docx'], help='Extracts selectable text; max 8 MB, 50 PDF pages.')
         source_url = st.text_input('Or link a Google Doc (link-accessible)', placeholder='https://docs.google.com/document/d/…/edit', help='Document must allow link-based text export. Private Docs require uploading a PDF or DOCX instead.')
-    with st.expander('Creative brief · optional controls', expanded=True):
+    with st.expander('Advanced writing controls · optional', expanded=False):
         c1, c2 = st.columns(2)
         with c1:
             target_words = st.number_input('Target word count (0 = asset default)', min_value=0, max_value=10000, value=0, step=100)
