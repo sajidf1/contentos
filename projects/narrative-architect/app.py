@@ -4,7 +4,11 @@ import streamlit as st
 
 st.set_page_config(page_title="Narrative Architect", page_icon="📰", layout="wide")
 st.title("Narrative Architect")
-st.caption("Turn an executive interview or research brief into a journalist's story architecture. No paid AI API required.")
+st.caption("Turn supplied research or interview notes into a source-first story plan. No paid AI API required.")
+st.info("PUBLIC DEMO · Preloaded notes are fictional. This planner neither verifies facts nor calls an AI service.")
+DEMO_NOTES = "SYNTHETIC EXAMPLE — NOT A REAL INTERVIEW OR CUSTOMER RECORD\nA fictional enterprise technology buyer says its AI pilots stall when teams cannot agree on data ownership and governance.\nIn this invented scenario, the finance leader requests a clear success metric before approving a production rollout.\nThe fictional data leader says teams need a named owner for model quality, security review and operational handoff.\nThe hypothetical pilot team proposes a 60-day evaluation of reliability, user adoption and business impact.\nA potential counterargument is that smaller pilots may succeed without a formal governance program."
+if "source_notes" not in st.session_state:
+    st.session_state.source_notes = DEMO_NOTES
 with st.sidebar:
     st.header("Editorial assignment")
     audience = st.text_input("Reader", "Enterprise technology decision-makers")
@@ -12,7 +16,14 @@ with st.sidebar:
     asset = st.selectbox("Output", ["Reported article", "Executive byline", "Research-led feature"])
     st.info("This is a structured editorial planning tool, not generative AI. Review and verify every claim before publication.")
 headline = st.text_input("Working story topic", "Why enterprise AI pilots struggle to reach production")
-source = st.text_area("Paste interview notes or research brief", height=220, placeholder="Paste your source material here. Separate observations and quotes with new lines.")
+demo_col, clear_col = st.columns(2)
+with demo_col:
+    if st.button("Load fictional example", use_container_width=True):
+        st.session_state.source_notes = DEMO_NOTES
+with clear_col:
+    if st.button("Clear notes", use_container_width=True):
+        st.session_state.source_notes = ""
+source = st.text_area("Source notes / fictional sample", key="source_notes", height=220, placeholder="Paste non-confidential notes here. Put each observation on a new line.")
 def sentences(text):
     return [s.strip(" •-\t") for s in re.split(r"(?<=[.!?])\s+|\n+", text) if len(s.strip()) > 12]
 if st.button("Build story architecture", type="primary"):
@@ -43,4 +54,7 @@ if st.button("Build story architecture", type="primary"):
         st.write("• An informed counterargument or limitation")
         st.write("• Attribution and permission for any direct quotation")
         st.markdown("**Editorial brief**")
-        st.code(f"Asset: {asset}\nAngle: {angle}\nAudience: {audience}\nTopic: {headline}\nEvidence statements supplied: {len(facts)}", language="text")
+        brief = (f"Asset: {asset}\\nAngle: {angle}\\nAudience: {audience}\\nTopic: {headline}\\n"
+                 f"Evidence statements supplied: {len(facts)}\\nSource status: supplied or fictional, unverified")
+        st.code(brief, language="text")
+        st.download_button("Download editorial brief", brief, file_name="narrative-architect-brief.txt", mime="text/plain")
