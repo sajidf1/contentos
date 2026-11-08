@@ -301,6 +301,9 @@ def show(res: dict) -> None:
     p2.metric('US claims flags', len(preflight['legal']))
     p3.metric('Headings found', preflight['seo']['headings'])
     with st.expander('Review style, claims and search optimization recommendations', expanded=True):
+        st.markdown('**Journalistic B2B structure**')
+        for recommendation in preflight['journalistic_structure']:
+            st.write('• ' + recommendation)
         st.markdown('**AP-informed style guidance**')
         if preflight['ap']:
             for item in preflight['ap']:
