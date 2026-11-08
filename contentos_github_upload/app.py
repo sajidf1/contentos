@@ -18,8 +18,8 @@ st.markdown("**Explore the other projects**")
 project_link_left, project_link_right = st.columns(2)
 with project_link_left:
     st.link_button(
-        "Narrative Architect — GitHub ↗",
-        "https://github.com/sajidf1/contentos/tree/main/projects/narrative-architect",
+        "Narrative Architect — live demo ↗",
+        "https://narrative-architect-app.streamlit.app/",
         width="stretch",
     )
 with project_link_right:
