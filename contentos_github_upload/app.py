@@ -14,22 +14,6 @@ from contentos.guard import BudgetExceeded, DailyCap, Meter
 
 st.set_page_config(page_title='Content Studio | Workflow Demo', page_icon='✦', layout='wide', initial_sidebar_state='collapsed')
 
-st.markdown("**Explore the other projects**")
-project_link_left, project_link_right = st.columns(2)
-with project_link_left:
-    st.link_button(
-        "Narrative Architect — live demo ↗",
-        "https://narrative-architect-app.streamlit.app/",
-        width="stretch",
-    )
-with project_link_right:
-    st.link_button(
-        "Content Impact Lab — live demo ↗",
-        "https://content-impact-lab.streamlit.app/",
-        width="stretch",
-    )
-st.caption("Explore the public demos; source code for all three projects is available on GitHub.")
-
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
 :root {--studio-paper:#f3f0e8;--studio-ink:#171717;--studio-blue:#2145ff;--studio-acid:#d9ff43;--studio-line:#d8d4c9;}
@@ -207,6 +191,15 @@ div.stButton > button[kind="primary"]:hover,div.stFormSubmitButton > button[kind
   [data-testid="stMainBlockContainer"].block-container,
   [data-testid="stAppViewContainer"] .block-container {width:88vw !important;}
 }
+
+/* Harmonize the three public demos: remove lime and use the blue editorial mark. */
+:root{--studio-acid:#2145ff!important}
+.studio-hero:after{border-color:rgba(33,69,255,.06)!important}
+.studio-hero .studio-kicker{color:#2145ff!important}
+.studio-brand .brand-symbol{color:#2145ff}
+.studio-topnav{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:9px 0 18px}
+.studio-topnav a{font:700 .78rem/1.4 Manrope,Arial,sans-serif;color:#2145ff!important;text-decoration:none;border:1px solid #aab6ff;background:#fffefa;border-radius:100px;padding:9px 14px}
+.studio-topnav a:hover{background:#e9edff}
 </style>""", unsafe_allow_html=True)
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
@@ -379,12 +372,19 @@ live_ready = (cfg('ENABLE_LIVE_MODE').lower() == 'true' and bool(cfg('ANTHROPIC_
               and (bool(cfg('ACCESS_CODE')) or not require_code))
 
 st.markdown("""
-<div class="studio-header"><div class="studio-brand">Content <b>Studio</b> <span aria-hidden="true">✦</span></div><div class="studio-header-meta">AN AGENTIC CONTENT OPERATIONS DEMO · 01 / 06</div></div>
+<div class="studio-header"><div class="studio-brand">Content <b>Studio</b> <span class="brand-symbol" aria-hidden="true">✦</span></div><div class="studio-header-meta">AN AGENTIC CONTENT OPERATIONS DEMO · 01 / 06</div></div>
 <div class="studio-hero">
   <div class="studio-kicker">AGENTIC CONTENT WORKFLOW</div>
   <h1>From brief to better content.</h1>
   <p>Set your direction, generate a draft, review quality, and create channel-ready assets.</p>
   <div class="studio-steps" aria-label="Content workflow summary"><span>01 · Plan</span><span class="studio-arrow" aria-hidden="true">→</span><span>02 · Write</span><span class="studio-arrow" aria-hidden="true">→</span><span>03 · Review</span><span class="studio-arrow" aria-hidden="true">→</span><span>04 · Repurpose</span></div>
+</div>
+""", unsafe_allow_html=True)
+st.markdown("""
+<div class="studio-topnav">
+ <a href="https://narrative-architect-app.streamlit.app/" target="_blank" rel="noopener noreferrer">Narrative Architect ↗</a>
+ <a href="https://content-impact-lab.streamlit.app/" target="_blank" rel="noopener noreferrer">Content Impact Lab ↗</a>
+ <a href="https://github.com/sajidf1/contentos" target="_blank" rel="noopener noreferrer">GitHub source ↗</a>
 </div>
 """, unsafe_allow_html=True)
 st.caption('START HERE · Complete the creative brief below and select Run content workflow. This free demo uses templates; human review is required before publishing.')
