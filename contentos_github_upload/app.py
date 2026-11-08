@@ -175,6 +175,20 @@ div.stButton > button[kind="primary"]:hover,div.stFormSubmitButton > button[kind
 [data-testid="stExpander"]{border-radius:10px;}
 [data-testid="stHeadingWithActionElements"] h3{margin-top:.2rem;margin-bottom:.1rem;}
 [data-testid="stForm"]{padding:.8rem 1.15rem;}
+/* Match portfolio section content width: 6vw gutters on each side. */
+[data-testid="stMainBlockContainer"].block-container,
+[data-testid="stAppViewContainer"] .block-container {
+  width:88vw !important;
+  max-width:none !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+@media(max-width:760px){
+  [data-testid="stMainBlockContainer"].block-container,
+  [data-testid="stAppViewContainer"] .block-container {width:88vw !important;}
+}
 </style>""", unsafe_allow_html=True)
 SAMPLE = Path(__file__).parent / 'data' / 'sample_run.json'
 MODES = ['Recorded Claude sample (free)', 'Demo templates (free)', 'Live Claude (access code)']
