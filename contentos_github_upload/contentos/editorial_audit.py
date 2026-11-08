@@ -53,6 +53,19 @@ def audit(text, req):
     else:
         seo.append("For distribution, optimize the destination page and channel metadata; traditional page SEO does not directly apply to every script, ad or social post.")
     seo.append("Search intent, rankings, backlinks, indexability and SERP competition require external data and cannot be verified here.")
+    narrative = []
+    if req.asset_type in ("Blog post", "eBook"):
+        body_paragraphs = [p.strip() for p in paragraphs if not p.lstrip().startswith(("*", "-"))]
+        if len(body_paragraphs) < 3:
+            narrative.append("Develop a clear journalistic lead, supporting context and an early nut graf.")
+        else:
+            early = " ".join(body_paragraphs[2:5]).lower()
+            signals = ("this article", "this guide", "why it matters", "the stakes", "for ", "this report", "the question")
+            if not any(signal in early for signal in signals):
+                narrative.append("Review paragraphs 3-5 for a nut graf explaining why this matters and who is affected.")
+        narrative.append("Check inverted-pyramid ordering: lead with the most important substantiated point, then supporting evidence, context and implications.")
+    else:
+        narrative.append("Apply a strong journalistic hook where natural; do not force a long-form nut graf into short conversion copy.")
     references = load_json("editorial_benchmarks.json")["references"]
     criteria = []
     for ref in references:
@@ -61,6 +74,7 @@ def audit(text, req):
                 criteria.append(feature)
     return {
         "ap": _findings(text, AP_CHECKS),
+        "journalistic_structure": narrative,
         "legal": _findings(text, CLAIMS),
         "seo": {"topic": title, "topic_in_copy": topic_present, "headings": len(headings),
                 "word_count": len(words), "recommendations": seo},
