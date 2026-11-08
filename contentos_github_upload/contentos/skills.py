@@ -11,6 +11,16 @@ SYSTEM = (
 
 # Editorial craft criteria are original abstractions, not copied portfolio text.
 # Reference metadata: data/editorial_benchmarks.json. Assets have not been ingested.
+JOURNALISTIC_B2B_STANDARD = (
+    "Write like an independent-minded journalist covering a B2B company, not a corporate press release. "
+    "Lead with a reported-style tension, consequential observation or precise reader question when appropriate; never fabricate reporting, scenes, interviews, quotes or facts. "
+    "Use an inverted-pyramid structure: the most consequential verified information first, then context, evidence, nuance and implications. "
+    "For substantive articles, guides and reported-style narratives, establish a nut graf by paragraph three to five, explaining why the story matters now and to whom. "
+    "Do not label the nut graf in publication-ready copy. Keep a natural editorial voice and AP-informed US English. "
+    "For ads, landing pages and short social copy, adapt the principle to the format rather than forcing five paragraphs. "
+    "Use portfolio references as benchmarks for narrative craft and voice, but do not treat their metadata as a full-text style model or copy their language."
+)
+
 EDITORIAL_PRINCIPLES = (
     "Follow AP Style conventions for US English, favoring plain language, concise attribution and consistent capitalization. "
     "Lead with a specific reader problem or tension, not a generic technology claim. "
@@ -52,7 +62,7 @@ ASSET_PLAYBOOKS = {
 }
 
 REVIEW_GUIDANCE = {
-    "Narrative quality": "Does the piece have a specific hook, clear thesis, logical argument and memorable takeaway?",
+    "Narrative quality": "Does the piece open with a journalistic hook, lead with the most consequential information, and explain why it matters in an early nut graf when appropriate?",
     "Audience relevance": "Does it address a named reader's decisions, objections and level of expertise?",
     "Evidence discipline": "Are factual assertions sourced, qualified, or marked [VERIFY], with no invented quotes or metrics?",
     "Format craft": "Does it respect the format's conventions, structure, requested outline and length?",
