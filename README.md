@@ -18,7 +18,7 @@ This repository contains three demonstrations built to make that thinking tangib
 
 ## Try Content Studio
 
-1. Open the [live demo](https://content-studio-demo.streamlit.app/). Use the Streamlit sidebar to switch between **Content Studio**, **Narrative Architect**, and **Content Impact Lab**. All three are included in the same deployed app; separate hosting is not required.
+1. Open the [live demo](https://content-studio-demo.streamlit.app/). Content Studio is the hosted app. Narrative Architect and Content Impact Lab are separate public source-code demos linked at the top of Content Studio, with local run instructions in their own READMEs.
 2. Review the **fictional Salesforce-style opportunities** and select a deal.
 3. Copy the synthetic sales brief, or check the box to attach it to the workflow.
 4. Choose an asset, edit the creative direction and run the free demo.
@@ -40,7 +40,7 @@ pytest -q
 streamlit run app.py
 ```
 
-The other two projects have their own READMEs and run instructions. Streamlit also discovers them through `contentos_github_upload/pages/`, so the existing Content Studio deployment can serve all three under one app. GitHub Actions runs syntax checks and the Content Studio test suite on pushes and pull requests.
+The other two projects have their own READMEs and run instructions. They are not part of Content Studio's Streamlit navigation and are not separately hosted. GitHub Actions runs syntax checks and the Content Studio test suite on pushes and pull requests.
 
 ## How it is organized
 
